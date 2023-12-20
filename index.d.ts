@@ -6,3 +6,7 @@ interface Window {
 
   mainMessage: string
 }
+declare module "*.png" {
+  const value: string
+  export = value
+}
