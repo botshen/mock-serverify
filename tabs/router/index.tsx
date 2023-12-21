@@ -3,23 +3,24 @@ import { createHashRouter, Navigate } from "react-router-dom"
 import Logs from "~tabs/log"
 import Main from "~tabs/main"
 import ProjectList from "~tabs/projectList"
+import Setting from "~tabs/setting"
 
 export const globalRouters = createHashRouter([
   {
     path: "/",
-    element: (
-      <>
-        <Main />
-      </>
-    ),
+    element: <Main />,
     children: [
+      {
+        path: "projectList/:id",
+        element: <Logs />
+      },
       {
         path: "projectList",
         element: <ProjectList />
       },
       {
-        path: "logs",
-        element: <Logs />
+        path: "settings",
+        element: <Setting />
       },
       {
         // 如果URL没有"#路由"，跳转Home页面
