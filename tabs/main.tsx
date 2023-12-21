@@ -17,10 +17,8 @@ export default function Main() {
       <GridItem area="nav">
         <NavBar />
       </GridItem>
-      <GridItem area="aside" bg="gold">
-        aside
-      </GridItem>
-      <GridItem area="main" bg="blue">
+      <GridItem area="aside">aside</GridItem>
+      <GridItem area="main">
         <Outlet />
       </GridItem>
     </Grid>

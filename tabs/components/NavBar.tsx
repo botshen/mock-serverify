@@ -1,12 +1,14 @@
 import { HStack, Image, Text } from "@chakra-ui/react"
 
 import logo from "../../assets/mocking.png"
+import ColorModeSwitch from "./ColorModeSwitch"
 
 const NavBar = () => {
   return (
-    <HStack>
+    <HStack justifyContent="space-between" padding="10px">
       <Image src={logo} boxSize="60px" padding="10px"></Image>
-      <Text fontSize="large">mock-serverify</Text>
+      {/* <Text fontSize="large">mock-serverify</Text> */}
+      <ColorModeSwitch></ColorModeSwitch>
     </HStack>
   )
 }
