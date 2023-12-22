@@ -49,29 +49,29 @@ export default function Logs() {
           {/* <TableCaption>Imperial to metric conversion factors</TableCaption> */}
           <Thead>
             <Tr>
-              <Th fontSize="x-large">Comment</Th>
-              <Th fontSize="x-large">Url</Th>
-              <Th fontSize="x-large">Method</Th>
-              <Th fontSize="x-large">Code</Th>
-              <Th fontSize="x-large">SwitchOn</Th>
-              <Th fontSize="x-large">Action</Th>
+              <Th fontSize="medium">Comment</Th>
+              <Th fontSize="medium">Url</Th>
+              <Th fontSize="medium">Method</Th>
+              <Th fontSize="medium">Code</Th>
+              <Th fontSize="medium">SwitchOn</Th>
+              <Th fontSize="medium">Action</Th>
             </Tr>
           </Thead>
           <Tbody>
             {list.map((item, index) => (
               <Tr key={index}>
-                <Td fontSize="x-large">{item.comment}</Td>
-                <Td fontSize="x-large">{item.url}</Td>
-                <Td fontSize="x-large">{item.method}</Td>
-                <Td fontSize="x-large">{item.code}</Td>
-                <Td fontSize="x-large">
+                <Td fontSize="medium">{item.comment}</Td>
+                <Td fontSize="medium">{item.url}</Td>
+                <Td fontSize="medium">{item.method}</Td>
+                <Td fontSize="medium">{item.code}</Td>
+                <Td fontSize="medium">
                   <Switch
                     isChecked={item.switchOn}
                     onChange={() => handleChangeSwitch(index)}
                     colorScheme="red"
                   />
                 </Td>
-                <Td fontSize="x-large">
+                <Td fontSize="medium">
                   <AddIcon marginRight="10px" cursor="pointer"></AddIcon>
                   <PhoneIcon marginRight="10px" cursor="pointer"></PhoneIcon>
                   <WarningIcon cursor="pointer"></WarningIcon>

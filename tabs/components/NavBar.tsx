@@ -7,7 +7,6 @@ const NavBar = () => {
   return (
     <HStack justifyContent="space-between" padding="10px">
       <Image src={logo} boxSize="60px" padding="10px"></Image>
-      {/* <Text fontSize="large">mock-serverify</Text> */}
       <ColorModeSwitch></ColorModeSwitch>
     </HStack>
   )
