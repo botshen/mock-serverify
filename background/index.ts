@@ -2,7 +2,7 @@
 
 chrome.action.onClicked.addListener(() => {
   try {
-    const targetUrl = chrome.runtime.getURL("tabs/delta-flyer.html")
+    const targetUrl = chrome.runtime.getURL("tabs/App.html")
 
     chrome.tabs.query({ url: targetUrl }, (tabs) => {
       console.log(
