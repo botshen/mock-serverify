@@ -18,7 +18,7 @@ import {
 import { Field, Form, Formik } from "formik"
 import { useNavigate } from "react-router-dom"
 
-const ContentNavBar = () => {
+const ProjectNavBar = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const navigation = useNavigate()
 
@@ -68,11 +68,6 @@ const ContentNavBar = () => {
             <Formik
               initialValues={{ name: "", baseUrl: "", desc: "" }}
               onSubmit={(values, actions) => {
-                console.log(
-                  "%c [ values ]-71",
-                  "font-size:13px; background:pink; color:#bf2c9f;",
-                  values
-                )
                 setTimeout(() => {
                   // ToDo 存储
                   actions.setSubmitting(false)
@@ -135,4 +130,4 @@ const ContentNavBar = () => {
   )
 }
 
-export default ContentNavBar
+export default ProjectNavBar

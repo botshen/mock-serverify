@@ -9,6 +9,10 @@ const menu = [
     link: "/projectList"
   },
   {
+    name: "Logs",
+    link: "/logs"
+  },
+  {
     name: "Settings",
     link: "/settings"
   }

@@ -1,8 +1,8 @@
 import { SimpleGrid } from "@chakra-ui/react"
 import { useLocation } from "react-router-dom"
 
-import ContentNavBar from "./components/ContentNavBar"
 import ProjectCard from "./components/ProjectCard"
+import ProjectNavBar from "./components/ProjectNavBar"
 
 export default function ProjectList() {
   const location = useLocation()
@@ -36,7 +36,7 @@ export default function ProjectList() {
   ]
   return (
     <>
-      <ContentNavBar />
+      <ProjectNavBar />
       <SimpleGrid
         templateColumns="repeat(auto-fill, minmax(250px, 1fr))"
         spacing={10}

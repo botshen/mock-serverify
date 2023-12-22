@@ -52,7 +52,7 @@ const ProjectCard = ({ name, description, baseUrl }: Props) => {
       <CardBody>
         <Heading fontSize="16px">{name}</Heading>
         <Text fontSize="md">{baseUrl}</Text>
-        <Text>{description}</Text>
+        <Text fontSize="md">{description}</Text>
         <HStack marginTop="20px" justifyContent="space-between">
           <Button
             width="50%"

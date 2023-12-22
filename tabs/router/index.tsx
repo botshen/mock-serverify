@@ -1,9 +1,10 @@
 import { createHashRouter, Navigate } from "react-router-dom"
 
 import RuleEditor from "~tabs/components/RuleEditor"
-import Logs from "~tabs/log"
+import Logs from "~tabs/Logs"
 import Main from "~tabs/main"
 import ProjectList from "~tabs/projectList"
+import SavedRules from "~tabs/savedRules"
 import Setting from "~tabs/setting"
 
 export const globalRouters = createHashRouter([
@@ -16,8 +17,12 @@ export const globalRouters = createHashRouter([
         element: <RuleEditor />
       },
       {
+        path: "projectList/:id/edit",
+        element: <RuleEditor />
+      },
+      {
         path: "projectList/:id",
-        element: <Logs />
+        element: <SavedRules />
       },
       {
         path: "projectList",
@@ -26,6 +31,10 @@ export const globalRouters = createHashRouter([
       {
         path: "settings",
         element: <Setting />
+      },
+      {
+        path: "logs",
+        element: <Logs />
       },
       {
         // 如果URL没有"#路由"，跳转Home页面
