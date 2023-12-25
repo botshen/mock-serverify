@@ -74,6 +74,14 @@ const ProjectCard = ({ name, description, baseUrl }: Props) => {
       projects.filter((item: { baseUrl: string }) => item.baseUrl !== baseUrl)
     )
     modals.modal2.onClose()
+    toast({
+      title: "Modification successful",
+      position: "top",
+      isClosable: true,
+      containerStyle: {
+        fontSize: "1.2rem"
+      }
+    })
   }
   return (
     <Card borderRadius={10} cursor="pointer" onClick={handleCardClick}>
@@ -105,10 +113,9 @@ const ProjectCard = ({ name, description, baseUrl }: Props) => {
         <AlertDialogOverlay>
           <AlertDialogContent>
             <AlertDialogHeader fontSize="lg" fontWeight="bold">
-              Delete Customer
+              Delete Project
             </AlertDialogHeader>
-
-            <AlertDialogBody>
+            <AlertDialogBody fontSize="lg">
               Are you sure? You can't undo this action afterwards.
             </AlertDialogBody>
 

@@ -8,62 +8,7 @@ import ProjectNavBar from "./components/ProjectNavBar"
 
 export default function ProjectList() {
   const location = useLocation()
-  console.log(location.pathname)
-
-  const [projectList, setprojectList] = useStorage(
-    "mock_genius_projects",
-    (v) =>
-      v === undefined
-        ? [
-            {
-              isRealRequest: false,
-              isTerminalLogOpen: false,
-              baseUrl: "http://localhost:23223",
-              name: "wjnwncnw",
-              description: "nwncwnc",
-              rules: [
-                {
-                  Response: {
-                    code: 200,
-                    data: {},
-                    message: "success"
-                  },
-                  code: "200",
-                  delay: "0",
-                  method: "POST",
-                  name: "test",
-                  pathRule: "/api/test",
-                  switchOn: true
-                }
-              ],
-              switchOn: true
-            },
-            {
-              isRealRequest: false,
-              isTerminalLogOpen: false,
-              baseUrl: "http://localhost:5122273",
-              name: "swst",
-              description: "2222",
-              rules: [
-                {
-                  Response: {
-                    code: 200,
-                    data: {},
-                    message: "success"
-                  },
-                  code: "200",
-                  delay: "0",
-                  method: "POST",
-                  name: "test",
-                  pathRule: "/api/test",
-                  switchOn: true
-                }
-              ],
-              switchOn: true
-            }
-          ]
-        : v
-  )
+  const [projectList] = useStorage("mock_genius_projects", (v) => v ?? [])
 
   return (
     <>

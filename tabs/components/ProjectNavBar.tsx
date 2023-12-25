@@ -13,14 +13,18 @@ import {
   ModalOverlay,
   Spacer,
   Text,
-  useDisclosure
+  useDisclosure,
+  useToast
 } from "@chakra-ui/react"
 import { Field, Form, Formik } from "formik"
 import { useNavigate } from "react-router-dom"
 
+import { useStorage } from "@plasmohq/storage/hook"
+
 const ProjectNavBar = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const navigation = useNavigate()
+  const [projects, setProjects] = useStorage("mock_genius_projects")
+  const toast = useToast()
 
   const validateName = (value) => {
     let error
@@ -33,6 +37,10 @@ const ProjectNavBar = () => {
     let error
     if (!value) {
       error = "BaseUrl is required"
+    } else if (!value.startsWith("http://") && !value.startsWith("https://")) {
+      error = "BaseUrl must be a valid url"
+    } else if (projects.find((project) => project.baseUrl === value)) {
+      error = "baseUrl already exists"
     }
     return error
   }
@@ -43,9 +51,7 @@ const ProjectNavBar = () => {
     }
     return error
   }
-  const onNavigate = (url: string) => {
-    navigation(url + "/create")
-  }
+
   return (
     <>
       <HStack justifyContent="space-between" alignItems="center" padding="10px">
@@ -66,15 +72,19 @@ const ProjectNavBar = () => {
           <ModalCloseButton />
           <ModalBody>
             <Formik
-              initialValues={{ name: "", baseUrl: "", desc: "" }}
+              initialValues={{ name: "", baseUrl: "http://", description: "" }}
               onSubmit={(values, actions) => {
-                // setTimeout(() => {
-                //   // ToDo 存储
-
-                // }, 1000)
-                // onNavigate(values.baseUrl)
-
+                setProjects(projects.concat(values))
                 actions.setSubmitting(false)
+                onClose()
+                toast({
+                  title: "Modification successful",
+                  position: "top",
+                  isClosable: true,
+                  containerStyle: {
+                    fontSize: "1.2rem"
+                  }
+                })
               }}>
               {(props) => (
                 <Form>
@@ -100,12 +110,14 @@ const ProjectNavBar = () => {
                       </FormControl>
                     )}
                   </Field>
-                  <Field name="desc" validate={validateDesc}>
+                  <Field name="description" validate={validateDesc}>
                     {({ field, form }) => (
                       <FormControl
-                        isInvalid={form.errors.desc && form.touched.desc}>
-                        <FormLabel>Desc</FormLabel>
-                        <Input {...field} placeholder="desc" />
+                        isInvalid={
+                          form.errors.desc && form.touched.description
+                        }>
+                        <FormLabel>Description</FormLabel>
+                        <Input {...field} placeholder="description" />
                         <FormErrorMessage>{form.errors.desc}</FormErrorMessage>
                       </FormControl>
                     )}
