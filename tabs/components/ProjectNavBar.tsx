@@ -68,11 +68,13 @@ const ProjectNavBar = () => {
             <Formik
               initialValues={{ name: "", baseUrl: "", desc: "" }}
               onSubmit={(values, actions) => {
-                setTimeout(() => {
-                  // ToDo 存储
-                  actions.setSubmitting(false)
-                }, 1000)
-                onNavigate(values.baseUrl)
+                // setTimeout(() => {
+                //   // ToDo 存储
+
+                // }, 1000)
+                // onNavigate(values.baseUrl)
+
+                actions.setSubmitting(false)
               }}>
               {(props) => (
                 <Form>

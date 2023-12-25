@@ -26,6 +26,9 @@ dependencies:
   framer-motion:
     specifier: ^10.16.16
     version: 10.16.16(react-dom@18.2.0)(react@18.2.0)
+  hook:
+    specifier: link:@plasmohq/storage/hook
+    version: link:@plasmohq/storage/hook
   plasmo:
     specifier: 0.84.0
     version: 0.84.0(postcss@8.4.32)(react-dom@18.2.0)(react@18.2.0)
