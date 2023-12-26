@@ -13,10 +13,13 @@ import {
   Select,
   Spacer,
   Switch,
-  Text
+  VStack
 } from "@chakra-ui/react"
 import { Field, Form, Formik } from "formik"
+import { useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
+
+import ResponseEditors from "./ResponseEditor"
 
 const RuleEditor = () => {
   const { baseUrl } = useLocation().state
@@ -38,124 +41,165 @@ const RuleEditor = () => {
   const handleCancel = () => {
     navigation(-1)
   }
-
+  const jsonData = {
+    name: "John Doe",
+    age: 30,
+    isStudent: false
+  }
+  const [content, setContent] = useState(() => {
+    if (!jsonData) {
+      return {
+        json: undefined,
+        text: "",
+        textAreaValue: ""
+      }
+    }
+    if (typeof jsonData === "object") {
+      return {
+        json: jsonData,
+        text: undefined,
+        textAreaValue: JSON.stringify(jsonData)
+      }
+    } else {
+      try {
+        const parse = JSON.parse(jsonData)
+        return {
+          json: parse,
+          text: undefined,
+          textAreaValue: jsonData
+        }
+      } catch (error) {
+        return {
+          json: undefined,
+          text: jsonData,
+          textAreaValue: jsonData
+        }
+      }
+    }
+  })
   return (
     <>
-      <HStack padding="20px">
+      <VStack padding="20px" height="500px">
         <Formik
           initialValues={{
-            name1: "Sasuke",
-            name2: "",
-            name3: "" /* 根据需要添加更多唯一名称 */
+            pathRule: "/api/v1",
+            Method: "get",
+            Delay: "200",
+            code: "200",
+            Comments: "备注"
           }}
           onSubmit={(values, actions) => {
             setTimeout(() => {
-              alert(JSON.stringify(values, null, 2))
+              const formData = {
+                ...values,
+                json: content.json
+              }
+              console.log("formData", formData)
+
               actions.setSubmitting(false)
             }, 1000)
           }}>
           {(props) => (
             <Form>
               <Grid
-                templateColumns="repeat(auto-fill, minmax(200px, 1fr))"
+                marginBottom="20px"
+                templateColumns={{
+                  base: "1fr",
+                  md: "repeat(5, 1fr)"
+                }}
                 gap={4}>
                 <Box>
-                  <Field name="switchOn" validate={validateName}>
+                  <Field name="pathRule" validate={validateName}>
                     {({ field, form }) => (
                       <FormControl
                         isInvalid={
-                          form.errors.switchOn && form.touched.switchOn
+                          form.errors.pathRule && form.touched.pathRule
                         }>
-                        <FormLabel>switchOn</FormLabel>
-                        <Switch {...field} colorScheme="blue" />
-                        <FormErrorMessage>{form.errors.name1}</FormErrorMessage>
-                      </FormControl>
-                    )}
-                  </Field>
-                </Box>
-
-                <Box>
-                  <Field name="name2" validate={validateName}>
-                    {({ field, form }) => (
-                      <FormControl
-                        isInvalid={form.errors.name2 && form.touched.name2}>
                         <FormLabel>pathRule</FormLabel>
                         <Input {...field} placeholder="名字" />
-                        <FormErrorMessage>{form.errors.name2}</FormErrorMessage>
+                        <FormErrorMessage>
+                          {form.errors.pathRule}
+                        </FormErrorMessage>
                       </FormControl>
                     )}
                   </Field>
                 </Box>
-
                 <Box>
-                  <Field name="name3" validate={validateName}>
+                  <Field name="Method" validate={validateName}>
                     {({ field, form }) => (
                       <FormControl
-                        isInvalid={form.errors.name3 && form.touched.name3}>
+                        isInvalid={form.errors.Method && form.touched.Method}>
                         <FormLabel>Method</FormLabel>
                         <Select {...field} placeholder="Select option">
-                          <option value="option1">Option 1</option>
-                          <option value="option2">Option 2</option>
-                          <option value="option3">Option 3</option>
+                          <option value="get">get</option>
+                          <option value="post">post</option>
                         </Select>
-                        <FormErrorMessage>{form.errors.name3}</FormErrorMessage>
+                        <FormErrorMessage>
+                          {form.errors.Method}
+                        </FormErrorMessage>
                       </FormControl>
                     )}
                   </Field>
                 </Box>
                 <Box>
-                  <Field name="name3" validate={validateName}>
+                  <Field name="Delay" validate={validateName}>
                     {({ field, form }) => (
                       <FormControl
-                        isInvalid={form.errors.name3 && form.touched.name3}>
+                        isInvalid={form.errors.Delay && form.touched.Delay}>
                         <FormLabel>Delay</FormLabel>
-                        <InputGroup size="sm">
+                        <InputGroup>
                           <Input {...field} placeholder="mysite" />
                           <InputRightAddon>ms</InputRightAddon>
                         </InputGroup>
-                        <FormErrorMessage>{form.errors.name3}</FormErrorMessage>
+                        <FormErrorMessage>{form.errors.Delay}</FormErrorMessage>
                       </FormControl>
                     )}
                   </Field>
                 </Box>
                 <Box>
-                  <Field name="name3" validate={validateName}>
+                  <Field name="code" validate={validateName}>
                     {({ field, form }) => (
                       <FormControl
-                        isInvalid={form.errors.name3 && form.touched.name3}>
+                        isInvalid={form.errors.code && form.touched.code}>
                         <FormLabel>code</FormLabel>
                         <Select {...field} placeholder="Select option">
-                          <option value="option1">Option 1</option>
-                          <option value="option2">Option 2</option>
-                          <option value="option3">Option 3</option>
+                          <option value="200">200</option>
+                          <option value="404">404</option>
+                          <option value="500">500</option>
                         </Select>
-                        <FormErrorMessage>{form.errors.name3}</FormErrorMessage>
+                        <FormErrorMessage>{form.errors.code}</FormErrorMessage>
                       </FormControl>
                     )}
                   </Field>
                 </Box>
                 <Box>
-                  <Field name="name3" validate={validateName}>
+                  <Field name="Comments" validate={validateName}>
                     {({ field, form }) => (
                       <FormControl
-                        isInvalid={form.errors.name3 && form.touched.name3}>
+                        isInvalid={
+                          form.errors.Comments && form.touched.Comments
+                        }>
                         <FormLabel>Comments</FormLabel>
                         <Input {...field} placeholder="名字" />
-                        <FormErrorMessage>{form.errors.name3}</FormErrorMessage>
+                        <FormErrorMessage>
+                          {form.errors.Comments}
+                        </FormErrorMessage>
                       </FormControl>
                     )}
                   </Field>
                 </Box>
               </Grid>
-
+              <ResponseEditors
+                content={content}
+                readOnly={false}
+                onChange={setContent}
+                mode="text"
+                // mainMenuBar={false}
+                // statusBar={false}
+              />
               <HStack mt={4} mb={4}>
                 <Spacer />
-                <Button
-                  onClick={handleCancel}
-                  isLoading={props.isSubmitting}
-                  type="submit">
-                  cancel
-                </Button>
+                <Button onClick={handleCancel}>cancel</Button>
                 <Button
                   colorScheme="teal"
                   isLoading={props.isSubmitting}
@@ -166,8 +210,7 @@ const RuleEditor = () => {
             </Form>
           )}
         </Formik>
-        <Text fontSize="6xl">json edit</Text>
-      </HStack>
+      </VStack>
     </>
   )
 }
