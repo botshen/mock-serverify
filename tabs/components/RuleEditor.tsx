@@ -16,14 +16,27 @@ import {
   Text
 } from "@chakra-ui/react"
 import { Field, Form, Formik } from "formik"
+import { useLocation, useNavigate } from "react-router-dom"
 
 const RuleEditor = () => {
+  const { baseUrl } = useLocation().state
+  console.log(
+    "%c [ baseUrl ]-23",
+    "font-size:13px; background:pink; color:#bf2c9f;",
+    baseUrl
+  )
+  const navigation = useNavigate()
+  const projectInfo = useLocation().state
+
   const validateName = (value) => {
     let error
     if (!value) {
       error = "Name is required"
     }
     return error
+  }
+  const handleCancel = () => {
+    navigation(-1)
   }
 
   return (
@@ -47,10 +60,12 @@ const RuleEditor = () => {
                 templateColumns="repeat(auto-fill, minmax(200px, 1fr))"
                 gap={4}>
                 <Box>
-                  <Field name="name1" validate={validateName}>
+                  <Field name="switchOn" validate={validateName}>
                     {({ field, form }) => (
                       <FormControl
-                        isInvalid={form.errors.name1 && form.touched.name1}>
+                        isInvalid={
+                          form.errors.switchOn && form.touched.switchOn
+                        }>
                         <FormLabel>switchOn</FormLabel>
                         <Switch {...field} colorScheme="blue" />
                         <FormErrorMessage>{form.errors.name1}</FormErrorMessage>
@@ -136,10 +151,16 @@ const RuleEditor = () => {
               <HStack mt={4} mb={4}>
                 <Spacer />
                 <Button
+                  onClick={handleCancel}
+                  isLoading={props.isSubmitting}
+                  type="submit">
+                  cancel
+                </Button>
+                <Button
                   colorScheme="teal"
                   isLoading={props.isSubmitting}
                   type="submit">
-                  提交
+                  submit
                 </Button>
               </HStack>
             </Form>

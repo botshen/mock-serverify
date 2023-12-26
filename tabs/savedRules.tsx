@@ -11,37 +11,39 @@ import {
   Thead,
   Tr
 } from "@chakra-ui/react"
-import { useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 
+import RulesNavBar from "./components/RulesNavBar"
+
 export default function SavedRules() {
-  const location = useLocation()
+  const projectInfo = useLocation().state
   console.log(
-    "%c [ location ]-7",
+    "%c [ baseUrl ]-21",
     "font-size:13px; background:pink; color:#bf2c9f;",
-    location
+    projectInfo
   )
-  const [list, setList] = useState([
-    {
-      comment: "some comment",
-      url: "/api.v1/some/url",
-      method: "GET",
-      code: 200,
-      switchOn: false
-    },
-    {
-      comment: "some comment",
-      url: "/api.v2/some/url",
-      method: "GET",
-      code: 200,
-      switchOn: true
-    }
-  ])
-  const handleChangeSwitch = (index: number) => {
-    const newList = [...list]
-    newList[index].switchOn = !newList[index].switchOn
-    setList(newList)
-  }
+
+  // const [list, setList] = useState([
+  //   {
+  //     comment: "some comment",
+  //     url: "/api.v1/some/url",
+  //     method: "GET",
+  //     code: 200,
+  //     switchOn: false
+  //   },
+  //   {
+  //     comment: "some comment",
+  //     url: "/api.v2/some/url",
+  //     method: "GET",
+  //     code: 200,
+  //     switchOn: true
+  //   }
+  // ])
+  // const handleChangeSwitch = (index: number) => {
+  //   const newList = [...list]
+  //   newList[index].switchOn = !newList[index].switchOn
+  //   setList(newList)
+  // }
   const navigation = useNavigate()
 
   const handleEdit = (row) => {
@@ -54,6 +56,7 @@ export default function SavedRules() {
   }
   return (
     <>
+      <RulesNavBar baseUrl={projectInfo.baseUrl} />
       <TableContainer>
         <Table variant="simple">
           {/* <TableCaption>Imperial to metric conversion factors</TableCaption> */}
@@ -68,29 +71,30 @@ export default function SavedRules() {
             </Tr>
           </Thead>
           <Tbody>
-            {list.map((item, index) => (
-              <Tr key={index}>
-                <Td fontSize="medium">{item.comment}</Td>
-                <Td fontSize="medium">{item.url}</Td>
-                <Td fontSize="medium">{item.method}</Td>
-                <Td fontSize="medium">{item.code}</Td>
-                <Td fontSize="medium">
-                  <Switch
-                    isChecked={item.switchOn}
-                    onChange={() => handleChangeSwitch(index)}
-                    colorScheme="red"
-                  />
-                </Td>
-                <Td fontSize="medium">
-                  <AddIcon
-                    onClick={() => handleEdit(item)}
-                    marginRight="10px"
-                    cursor="pointer"></AddIcon>
-                  <PhoneIcon marginRight="10px" cursor="pointer"></PhoneIcon>
-                  <WarningIcon cursor="pointer"></WarningIcon>
-                </Td>
-              </Tr>
-            ))}
+            {projectInfo?.rules?.length > 0 &&
+              projectInfo.rules.map((item, index) => (
+                <Tr key={index}>
+                  <Td fontSize="medium">{item.comment}</Td>
+                  <Td fontSize="medium">{item.url}</Td>
+                  <Td fontSize="medium">{item.method}</Td>
+                  <Td fontSize="medium">{item.code}</Td>
+                  <Td fontSize="medium">
+                    {/* <Switch
+                      isChecked={item.switchOn}
+                      onChange={() => handleChangeSwitch(index)}
+                      colorScheme="red"
+                    /> */}
+                  </Td>
+                  <Td fontSize="medium">
+                    <AddIcon
+                      onClick={() => handleEdit(item)}
+                      marginRight="10px"
+                      cursor="pointer"></AddIcon>
+                    <PhoneIcon marginRight="10px" cursor="pointer"></PhoneIcon>
+                    <WarningIcon cursor="pointer"></WarningIcon>
+                  </Td>
+                </Tr>
+              ))}
           </Tbody>
         </Table>
       </TableContainer>

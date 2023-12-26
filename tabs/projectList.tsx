@@ -9,6 +9,11 @@ import ProjectNavBar from "./components/ProjectNavBar"
 export default function ProjectList() {
   const location = useLocation()
   const [projectList] = useStorage("mock_genius_projects", (v) => v ?? [])
+  console.log(
+    "%c [ projectList ]-12",
+    "font-size:13px; background:pink; color:#bf2c9f;",
+    projectList
+  )
 
   return (
     <>

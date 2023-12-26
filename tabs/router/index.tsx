@@ -13,17 +13,18 @@ export const globalRouters = createHashRouter([
     element: <Main />,
     children: [
       {
-        path: "projectList/:id/create",
-        element: <RuleEditor />
-      },
-      {
-        path: "projectList/:id/edit",
-        element: <RuleEditor />
-      },
-      {
-        path: "projectList/:id",
+        path: "savedRules",
         element: <SavedRules />
       },
+      // {
+      //   path: "projectList/:id/create",
+      //   element: <RuleEditor />
+      // },
+      {
+        path: "editRule",
+        element: <RuleEditor />
+      },
+
       {
         path: "projectList",
         element: <ProjectList />

@@ -59,7 +59,9 @@ const ProjectCard = ({ name, description, baseUrl }: Props) => {
     return error
   }
   const handleCardClick = () => {
-    navigation(name)
+    navigation("../savedRules", {
+      state: projects?.find((project) => project.baseUrl === baseUrl)
+    })
   }
   const handleEdit = (event: React.MouseEvent) => {
     event.stopPropagation()
