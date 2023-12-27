@@ -13,88 +13,79 @@ import {
 } from "@chakra-ui/react"
 import { useLocation, useNavigate } from "react-router-dom"
 
+import { useStorage } from "@plasmohq/storage/hook"
+
 import RulesNavBar from "./components/RulesNavBar"
 
 export default function SavedRules() {
   const projectInfo = useLocation().state
-  console.log(
-    "%c [ baseUrl ]-21",
-    "font-size:13px; background:pink; color:#bf2c9f;",
-    projectInfo
-  )
 
-  // const [list, setList] = useState([
-  //   {
-  //     comment: "some comment",
-  //     url: "/api.v1/some/url",
-  //     method: "GET",
-  //     code: 200,
-  //     switchOn: false
-  //   },
-  //   {
-  //     comment: "some comment",
-  //     url: "/api.v2/some/url",
-  //     method: "GET",
-  //     code: 200,
-  //     switchOn: true
-  //   }
-  // ])
-  // const handleChangeSwitch = (index: number) => {
-  //   const newList = [...list]
-  //   newList[index].switchOn = !newList[index].switchOn
-  //   setList(newList)
-  // }
+  const [projects, setProjects] = useStorage("mock_genius_projects")
   const navigation = useNavigate()
 
   const handleEdit = (row) => {
-    console.log(
-      "%c [ row ]-46",
-      "font-size:13px; background:pink; color:#bf2c9f;",
-      row
-    )
     navigation("edit")
   }
+
+  const handleChangeSwitch = (index: number) => {}
+
+  const fontSize = "medium"
+  const iconStyle = { marginRight: "10px", cursor: "pointer" }
+
+  const rules =
+    projects?.find(
+      (i: { baseUrl: string }) => i.baseUrl === projectInfo.baseUrl
+    )?.rules || []
+
   return (
     <>
       <RulesNavBar baseUrl={projectInfo.baseUrl} />
       <TableContainer>
         <Table variant="simple">
-          {/* <TableCaption>Imperial to metric conversion factors</TableCaption> */}
           <Thead>
             <Tr>
-              <Th fontSize="medium">Comment</Th>
-              <Th fontSize="medium">Url</Th>
-              <Th fontSize="medium">Method</Th>
-              <Th fontSize="medium">Code</Th>
-              <Th fontSize="medium">SwitchOn</Th>
-              <Th fontSize="medium">Action</Th>
+              <Th fontSize={fontSize}>Comment</Th>
+              <Th fontSize={fontSize}>Url</Th>
+              <Th fontSize={fontSize}>Method</Th>
+              <Th fontSize={fontSize}>Code</Th>
+              <Th fontSize={fontSize}>SwitchOn</Th>
+              <Th fontSize={fontSize}>Action</Th>
             </Tr>
           </Thead>
           <Tbody>
-            {projectInfo?.rules?.length > 0 &&
-              projectInfo.rules.map((item, index) => (
-                <Tr key={index}>
-                  <Td fontSize="medium">{item.comment}</Td>
-                  <Td fontSize="medium">{item.url}</Td>
-                  <Td fontSize="medium">{item.method}</Td>
-                  <Td fontSize="medium">{item.code}</Td>
-                  <Td fontSize="medium">
-                    {/* <Switch
-                      isChecked={item.switchOn}
-                      onChange={() => handleChangeSwitch(index)}
-                      colorScheme="red"
-                    /> */}
-                  </Td>
-                  <Td fontSize="medium">
-                    <AddIcon
-                      onClick={() => handleEdit(item)}
-                      marginRight="10px"
-                      cursor="pointer"></AddIcon>
-                    <PhoneIcon marginRight="10px" cursor="pointer"></PhoneIcon>
-                    <WarningIcon cursor="pointer"></WarningIcon>
-                  </Td>
-                </Tr>
-              ))}
+            {rules.length > 0 &&
+              rules.map(
+                ({ Comments, pathRule, Method, code, switchOn }, index) => (
+                  <Tr key={pathRule}>
+                    <Td fontSize={fontSize}>{Comments}</Td>
+                    <Td fontSize={fontSize}>{pathRule}</Td>
+                    <Td fontSize={fontSize}>{Method}</Td>
+                    <Td fontSize={fontSize}>{code}</Td>
+                    <Td fontSize={fontSize}>
+                      <Switch
+                        isChecked={switchOn}
+                        onChange={() => handleChangeSwitch(index)}
+                        colorScheme="red"
+                      />
+                    </Td>
+                    <Td fontSize={fontSize}>
+                      <AddIcon
+                        onClick={() =>
+                          handleEdit({
+                            Comments,
+                            pathRule,
+                            Method,
+                            code,
+                            switchOn
+                          })
+                        }
+                        {...iconStyle}></AddIcon>
+                      <PhoneIcon {...iconStyle}></PhoneIcon>
+                      <WarningIcon {...iconStyle}></WarningIcon>
+                    </Td>
+                  </Tr>
+                )
+              )}
           </Tbody>
         </Table>
       </TableContainer>

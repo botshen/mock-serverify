@@ -8,7 +8,6 @@ import {
   HStack,
   Input,
   InputGroup,
-  InputLeftAddon,
   InputRightAddon,
   Select,
   Spacer,
@@ -19,17 +18,16 @@ import { Field, Form, Formik } from "formik"
 import { useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 
+import { useStorage } from "@plasmohq/storage/hook"
+
 import ResponseEditors from "./ResponseEditor"
 
 const RuleEditor = () => {
   const { baseUrl } = useLocation().state
-  console.log(
-    "%c [ baseUrl ]-23",
-    "font-size:13px; background:pink; color:#bf2c9f;",
-    baseUrl
-  )
+
   const navigation = useNavigate()
-  const projectInfo = useLocation().state
+
+  const [projects, setProjects] = useStorage("mock_genius_projects")
 
   const validateName = (value) => {
     let error
@@ -89,15 +87,32 @@ const RuleEditor = () => {
             Comments: "备注"
           }}
           onSubmit={(values, actions) => {
-            setTimeout(() => {
-              const formData = {
-                ...values,
-                json: content.json
-              }
-              console.log("formData", formData)
-
+            const formData = {
+              ...values,
+              json: content.json
+            }
+            // 如果有相同的pathRule，就不允许添加，并且提示
+            console.log("projects", projects)
+            const isExist = projects
+              ?.find((i) => i.baseUrl === baseUrl)
+              ?.rules?.find((i) => i.pathRule === formData.pathRule)
+            console.log("isExist", isExist)
+            if (isExist) {
+              alert("已经存在相同的pathRule")
               actions.setSubmitting(false)
-            }, 1000)
+              return
+            }
+            setProjects(
+              projects.map((item) => {
+                if (item.baseUrl === baseUrl) {
+                  if (!item.rules) item.rules = []
+                  item.rules.push(formData)
+                }
+                return item
+              })
+            )
+            actions.setSubmitting(false)
+            handleCancel()
           }}>
           {(props) => (
             <Form>

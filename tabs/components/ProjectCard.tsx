@@ -141,17 +141,6 @@ const ProjectCard = ({ name, description, baseUrl }: Props) => {
             <Formik
               initialValues={{ name, description, baseUrl }}
               onSubmit={(values, actions) => {
-                console.log(
-                  "%c [ values ]-66",
-                  "font-size:13px; background:pink; color:#bf2c9f;",
-                  values
-                )
-                console.log(
-                  "%c [ projects ]-93",
-                  "font-size:13px; background:pink; color:#bf2c9f;",
-                  projects
-                )
-
                 setProjects(
                   projects.map((project) =>
                     project.baseUrl === baseUrl
