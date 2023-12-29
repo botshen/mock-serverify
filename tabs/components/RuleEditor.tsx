@@ -23,33 +23,30 @@ import { useStorage } from "@plasmohq/storage/hook"
 import ResponseEditors from "./ResponseEditor"
 
 const RuleEditor = () => {
-  const { baseUrl, pathRule } = useLocation().state
-
+  const { baseUrl, pathRule, mode } = useLocation().state
   const navigation = useNavigate()
-
-  const [projects, setProjects] = useStorage("mock_genius_projects")
-  console.log(
-    "%c [ projects ]-31",
-    "font-size:13px; background:pink; color:#bf2c9f;",
-    projects
+  const [projects, setProjects] = useStorage<ProjectType[]>(
+    "mock_genius_projects"
   )
-  const rule = projects
-    ?.find((i) => i.baseUrl === baseUrl)
-    ?.rules?.find((i) => i.pathRule === pathRule) ?? {
-    pathRule: "",
-    Method: "",
-    Delay: "",
-    code: "",
-    Comments: ""
+
+  const geneRule = () => {
+    if (mode === "add") {
+      return {
+        pathRule: "",
+        Method: "",
+        Delay: "",
+        code: "",
+        Comments: ""
+      }
+    } else {
+      return projects
+        ?.find((i) => i.baseUrl === baseUrl)
+        ?.rules?.find((i) => i.pathRule === pathRule)
+    }
   }
-  console.log(
-    "%c [ rule ]-37",
-    "font-size:13px; background:pink; color:#bf2c9f;",
-    rule
-  )
 
-  const validateName = (value) => {
-    let error
+  const validateName = (value: string) => {
+    let error: string
     if (!value) {
       error = "Name is required"
     }
@@ -58,7 +55,7 @@ const RuleEditor = () => {
   const handleCancel = () => {
     navigation(-1)
   }
-  const jsonData = rule?.json ?? {}
+  const jsonData = geneRule()?.json ?? {}
   const [content, setContent] = useState(() => {
     if (!jsonData) {
       return {
@@ -93,40 +90,55 @@ const RuleEditor = () => {
   return (
     <>
       <VStack padding="20px" height="500px">
-        {rule.pathRule && (
+        {geneRule() && (
           <Formik
             initialValues={{
-              pathRule: rule.pathRule,
-              Method: rule.Method,
-              Delay: rule.Delay,
-              code: rule.code,
-              Comments: rule.Comments
+              pathRule: geneRule().pathRule,
+              Method: geneRule().Method,
+              Delay: geneRule().Delay,
+              code: geneRule().code,
+              Comments: geneRule().Comments
             }}
             onSubmit={(values, actions) => {
               const formData = {
                 ...values,
                 json: content.json
               }
-              // 如果有相同的pathRule，就不允许添加，并且提示
-              console.log("projects", projects)
               const isExist = projects
                 ?.find((i) => i.baseUrl === baseUrl)
                 ?.rules?.find((i) => i.pathRule === formData.pathRule)
-              console.log("isExist", isExist)
-              if (isExist) {
+              if (isExist && mode === "add") {
                 alert("已经存在相同的pathRule")
                 actions.setSubmitting(false)
                 return
               }
-              setProjects(
-                projects.map((item) => {
-                  if (item.baseUrl === baseUrl) {
-                    if (!item.rules) item.rules = []
-                    item.rules.push(formData)
-                  }
-                  return item
-                })
-              )
+              console.log("mode", mode)
+              if (mode === "add") {
+                setProjects(
+                  projects.map((item) => {
+                    if (item.baseUrl === baseUrl) {
+                      if (!item.rules) item.rules = []
+                      item.rules.push(formData)
+                    }
+                    return item
+                  })
+                )
+              }
+              if (mode === "edit") {
+                setProjects(
+                  projects.map((item) => {
+                    if (item.baseUrl === baseUrl) {
+                      item.rules = item.rules.map((i) => {
+                        if (i.pathRule === pathRule) {
+                          return formData
+                        }
+                        return i
+                      })
+                    }
+                    return item
+                  })
+                )
+              }
               actions.setSubmitting(false)
               handleCancel()
             }}>
@@ -147,7 +159,11 @@ const RuleEditor = () => {
                             form.errors.pathRule && form.touched.pathRule
                           }>
                           <FormLabel>pathRule</FormLabel>
-                          <Input {...field} placeholder="名字" />
+                          <Input
+                            {...field}
+                            disabled={true}
+                            placeholder="pathRule"
+                          />
                           <FormErrorMessage>
                             {form.errors.pathRule}
                           </FormErrorMessage>
@@ -229,8 +245,8 @@ const RuleEditor = () => {
                   readOnly={false}
                   onChange={setContent}
                   mode="text"
-                  // mainMenuBar={false}
-                  // statusBar={false}
+                  mainMenuBar={false}
+                  statusBar={false}
                 />
                 <HStack mt={4} mb={4}>
                   <Spacer />

@@ -26,7 +26,8 @@ const RulesNavBar = ({ baseUrl }: Props) => {
   const handleAddRule = () => {
     navigation("/editRule", {
       state: {
-        baseUrl
+        baseUrl,
+        mode: "add"
       }
     })
   }

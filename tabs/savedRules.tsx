@@ -23,7 +23,8 @@ export default function SavedRules() {
     navigation("/editRule", {
       state: {
         baseUrl: projectInfo.baseUrl,
-        pathRule: pathRule
+        pathRule: pathRule,
+        mode: "edit"
       }
     })
   }
