@@ -56,10 +56,10 @@ const ProjectNavBar = () => {
     <>
       <HStack justifyContent="space-between" alignItems="center" padding="10px">
         <HStack alignItems="center">
-          <Text fontSize="medium" fontWeight="bold">
+          {/* <Text fontSize="medium" fontWeight="bold">
             Rules
           </Text>
-          <Input placeholder="Basic usage" />
+          <Input placeholder="Basic usage" /> */}
         </HStack>
         <Button onClick={onOpen} colorScheme="blue">
           New Project

@@ -30,18 +30,26 @@ const RulesNavBar = ({ baseUrl }: Props) => {
       }
     })
   }
+  const onBack = () => {
+    navigation(-1)
+  }
   return (
     <>
       <HStack justifyContent="space-between" alignItems="center" padding="10px">
         <HStack alignItems="center">
-          <Text fontSize="medium" fontWeight="bold">
+          {/* <Text fontSize="medium" fontWeight="bold">
             Rules
           </Text>
-          <Input placeholder="Basic usage" />
+          <Input placeholder="Basic usage" /> */}
         </HStack>
-        <Button onClick={handleAddRule} colorScheme="blue">
-          New Rule
-        </Button>
+        <HStack>
+          <Button onClick={onBack} colorScheme="blue">
+            Back
+          </Button>
+          <Button onClick={handleAddRule} colorScheme="blue">
+            New Rule
+          </Button>
+        </HStack>
       </HStack>
     </>
   )

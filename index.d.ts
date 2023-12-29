@@ -12,6 +12,7 @@ interface RuleType {
   Delay: string
   code: string
   Comments: string
+  switchOn?: boolean
   json: {
     name: string
     age: number

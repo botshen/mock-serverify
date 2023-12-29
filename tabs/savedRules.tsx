@@ -1,12 +1,10 @@
-import { AddIcon, PhoneIcon, WarningIcon } from "@chakra-ui/icons"
+import { CopyIcon, DeleteIcon, EditIcon } from "@chakra-ui/icons"
 import {
   Switch,
   Table,
-  TableCaption,
   TableContainer,
   Tbody,
   Td,
-  Tfoot,
   Th,
   Thead,
   Tr
@@ -19,12 +17,25 @@ import RulesNavBar from "./components/RulesNavBar"
 
 export default function SavedRules() {
   const projectInfo = useLocation().state
-
   const [projects, setProjects] = useStorage("mock_genius_projects")
   const navigation = useNavigate()
-
-  const handleEdit = (row) => {
-    navigation("edit")
+  const handleEdit = (pathRule: string) => {
+    navigation("/editRule", {
+      state: {
+        baseUrl: projectInfo.baseUrl,
+        pathRule: pathRule
+      }
+    })
+  }
+  const handleDelete = (pathRule: string) => {
+    setProjects(
+      projects.map((item: ProjectType) => {
+        if (item.baseUrl === projectInfo.baseUrl) {
+          item.rules = item.rules.filter((i) => i.pathRule !== pathRule)
+        }
+        return item
+      })
+    )
   }
 
   const handleChangeSwitch = (index: number) => {}
@@ -69,19 +80,13 @@ export default function SavedRules() {
                       />
                     </Td>
                     <Td fontSize={fontSize}>
-                      <AddIcon
-                        onClick={() =>
-                          handleEdit({
-                            Comments,
-                            pathRule,
-                            Method,
-                            code,
-                            switchOn
-                          })
-                        }
-                        {...iconStyle}></AddIcon>
-                      <PhoneIcon {...iconStyle}></PhoneIcon>
-                      <WarningIcon {...iconStyle}></WarningIcon>
+                      <EditIcon
+                        onClick={() => handleEdit(pathRule)}
+                        {...iconStyle}></EditIcon>
+                      <CopyIcon {...iconStyle}></CopyIcon>
+                      <DeleteIcon
+                        onClick={() => handleDelete(pathRule)}
+                        {...iconStyle}></DeleteIcon>
                     </Td>
                   </Tr>
                 )
