@@ -14,10 +14,14 @@ import { useLocation, useNavigate } from "react-router-dom"
 import { useStorage } from "@plasmohq/storage/hook"
 
 import RulesNavBar from "./components/RulesNavBar"
+import { defaultValueFunction, storageConfig } from "./store"
 
 export default function SavedRules() {
   const projectInfo = useLocation().state
-  const [projects, setProjects] = useStorage("mock_genius_projects")
+  const [projects, setProjects] = useStorage<ProjectType[]>(
+    storageConfig,
+    defaultValueFunction
+  )
   const navigation = useNavigate()
   const handleEdit = (pathRule: string) => {
     navigation("/editRule", {

@@ -21,9 +21,14 @@ import { useNavigate } from "react-router-dom"
 
 import { useStorage } from "@plasmohq/storage/hook"
 
+import { defaultValueFunction, storageConfig } from "~tabs/store"
+
 const ProjectNavBar = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const [projects, setProjects] = useStorage("mock_genius_projects")
+  const [projects, setProjects] = useStorage<ProjectType[]>(
+    storageConfig,
+    defaultValueFunction
+  )
   const toast = useToast()
 
   const validateName = (value) => {

@@ -4,8 +4,6 @@ import "../assets/style.scss"
 
 import { ChakraProvider, ColorModeScript } from "@chakra-ui/react"
 
-import { useStorage } from "@plasmohq/storage/hook"
-
 import { globalRouters } from "./router"
 import theme from "./theme"
 

@@ -1,6 +1,5 @@
 import { List, ListIcon, ListItem, Text } from "@chakra-ui/react"
 import React from "react"
-import { GrProjects } from "react-icons/gr"
 import { useLocation, useNavigate } from "react-router-dom"
 
 const menu = [

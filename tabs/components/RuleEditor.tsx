@@ -20,13 +20,16 @@ import { useLocation, useNavigate } from "react-router-dom"
 
 import { useStorage } from "@plasmohq/storage/hook"
 
+import { defaultValueFunction, storageConfig } from "~tabs/store"
+
 import ResponseEditors from "./ResponseEditor"
 
 const RuleEditor = () => {
   const { baseUrl, pathRule, mode } = useLocation().state
   const navigation = useNavigate()
   const [projects, setProjects] = useStorage<ProjectType[]>(
-    "mock_genius_projects"
+    storageConfig,
+    defaultValueFunction
   )
 
   const geneRule = () => {
@@ -161,7 +164,7 @@ const RuleEditor = () => {
                           <FormLabel>pathRule</FormLabel>
                           <Input
                             {...field}
-                            disabled={true}
+                            disabled={mode === "edit"}
                             placeholder="pathRule"
                           />
                           <FormErrorMessage>

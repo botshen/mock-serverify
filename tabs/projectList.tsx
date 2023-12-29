@@ -1,18 +1,17 @@
 import { SimpleGrid } from "@chakra-ui/react"
 import { useLocation } from "react-router-dom"
 
+import { Storage } from "@plasmohq/storage"
 import { useStorage } from "@plasmohq/storage/hook"
 
 import ProjectCard from "./components/ProjectCard"
 import ProjectNavBar from "./components/ProjectNavBar"
+import { defaultValueFunction, storageConfig } from "./store"
 
 export default function ProjectList() {
-  const location = useLocation()
-  const [projectList] = useStorage("mock_genius_projects", (v) => v ?? [])
-  console.log(
-    "%c [ projectList ]-12",
-    "font-size:13px; background:pink; color:#bf2c9f;",
-    projectList
+  const [projectList] = useStorage<ProjectType[]>(
+    storageConfig,
+    defaultValueFunction
   )
 
   return (

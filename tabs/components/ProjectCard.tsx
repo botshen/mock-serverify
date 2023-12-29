@@ -34,6 +34,8 @@ import { useNavigate } from "react-router-dom"
 
 import { useStorage } from "@plasmohq/storage/hook"
 
+import { defaultValueFunction, storageConfig } from "~tabs/store"
+
 interface Props {
   name: string
   description: string
@@ -43,7 +45,10 @@ const ProjectCard = ({ name, description, baseUrl }: Props) => {
   const navigation = useNavigate()
   const cancelRef = React.useRef()
 
-  const [projects, setProjects] = useStorage("mock_genius_projects")
+  const [projects, setProjects] = useStorage<ProjectType[]>(
+    storageConfig,
+    defaultValueFunction
+  )
   const toast = useToast()
   const modals = {
     modal1: useDisclosure(),
