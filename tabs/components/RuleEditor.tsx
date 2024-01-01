@@ -15,7 +15,7 @@ import {
   VStack
 } from "@chakra-ui/react"
 import { Field, Form, Formik } from "formik"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 
 import { useStorage } from "@plasmohq/storage/hook"
@@ -58,38 +58,43 @@ const RuleEditor = () => {
   const handleCancel = () => {
     navigation(-1)
   }
+
   const jsonData = geneRule()?.json ?? {}
-  const [content, setContent] = useState(() => {
-    if (!jsonData) {
-      return {
-        json: undefined,
-        text: "",
-        textAreaValue: ""
-      }
-    }
-    if (typeof jsonData === "object") {
-      return {
-        json: jsonData,
-        text: undefined,
-        textAreaValue: JSON.stringify(jsonData)
-      }
-    } else {
-      try {
-        const parse = JSON.parse(jsonData)
-        return {
-          json: parse,
-          text: undefined,
-          textAreaValue: jsonData
-        }
-      } catch (error) {
-        return {
-          json: undefined,
-          text: jsonData,
-          textAreaValue: jsonData
-        }
-      }
-    }
-  })
+  console.log(
+    "%c [ jsonData ]-62",
+    "font-size:13px; background:pink; color:#bf2c9f;",
+    jsonData
+  )
+  // const [content, setContent] = useState(() => {
+  //   if (JSON.stringify(jsonData) === "{}") {
+  //     return {
+  //       json: {},
+  //       text: undefined,
+  //       textAreaValue: jsonData
+  //     }
+  //   }
+  //   return {
+  //     json: JSON.parse(jsonData),
+  //     text: undefined,
+  //     textAreaValue: jsonData
+  //   }
+  // })
+  // useEffect(() => {
+  //   //如果jsonData是空对象就不用更新了
+  //   if (JSON.stringify(jsonData) === "{}") {
+  //     setContent({
+  //       json: {},
+  //       text: undefined,
+  //       textAreaValue: jsonData
+  //     })
+  //   } else {
+  //     setContent({
+  //       json: JSON.parse(jsonData),
+  //       text: undefined,
+  //       textAreaValue: jsonData
+  //     })
+  //   }
+  // }, [jsonData])
   return (
     <>
       <VStack padding="20px" height="500px">
@@ -104,8 +109,8 @@ const RuleEditor = () => {
             }}
             onSubmit={(values, actions) => {
               const formData = {
-                ...values,
-                json: content.json
+                ...values
+                // json: content.text
               }
               const isExist = projects
                 ?.find((i) => i.baseUrl === baseUrl)
@@ -243,14 +248,14 @@ const RuleEditor = () => {
                     </Field>
                   </Box>
                 </Grid>
-                <ResponseEditors
+                {/* <ResponseEditors
                   content={content}
                   readOnly={false}
                   onChange={setContent}
                   mode="text"
                   mainMenuBar={false}
                   statusBar={false}
-                />
+                /> */}
                 <HStack mt={4} mb={4}>
                   <Spacer />
                   <Button onClick={handleCancel}>cancel</Button>
