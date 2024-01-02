@@ -79,7 +79,9 @@ const ProjectNavBar = () => {
             <Formik
               initialValues={{ name: "", baseUrl: "http://", description: "" }}
               onSubmit={(values, actions) => {
-                setProjects(projects.concat(values))
+                setProjects(
+                  projects.concat({ ...values, rules: [], switchOn: true })
+                )
                 actions.setSubmitting(false)
                 onClose()
                 toast({

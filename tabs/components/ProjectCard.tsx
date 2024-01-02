@@ -34,7 +34,14 @@ import { useNavigate } from "react-router-dom"
 
 import { useStorage } from "@plasmohq/storage/hook"
 
-import { defaultValueFunction, storageConfig } from "~tabs/store"
+import {
+  defaultCurrent,
+  defaultLogsFunction,
+  defaultValueFunction,
+  storageConfig,
+  storageCurrentConfig,
+  storageLogsConfig
+} from "~tabs/store"
 
 interface Props {
   name: string
@@ -44,10 +51,15 @@ interface Props {
 const ProjectCard = ({ name, description, baseUrl }: Props) => {
   const navigation = useNavigate()
   const cancelRef = React.useRef()
+  const [logs, setLogs] = useStorage(storageLogsConfig, defaultLogsFunction)
 
   const [projects, setProjects] = useStorage<ProjectType[]>(
     storageConfig,
     defaultValueFunction
+  )
+  const [curProjects, setCurProjects] = useStorage<string>(
+    storageCurrentConfig,
+    defaultCurrent
   )
   const toast = useToast()
   const modals = {
@@ -64,6 +76,11 @@ const ProjectCard = ({ name, description, baseUrl }: Props) => {
     return error
   }
   const handleCardClick = () => {
+    setCurProjects(baseUrl)
+    if (curProjects !== baseUrl) {
+      // reset logs if switch to another project
+      setLogs([])
+    }
     navigation("../savedRules", {
       state: projects?.find((project) => project.baseUrl === baseUrl)
     })
@@ -146,13 +163,12 @@ const ProjectCard = ({ name, description, baseUrl }: Props) => {
             <Formik
               initialValues={{ name, description, baseUrl }}
               onSubmit={(values, actions) => {
-                setProjects(
-                  projects.map((project) =>
-                    project.baseUrl === baseUrl
-                      ? { ...project, ...values }
-                      : project
-                  )
+                const result = projects.map((project) =>
+                  project.baseUrl === baseUrl
+                    ? { ...project, ...values, switchOn: true }
+                    : { ...project, switchOn: true }
                 )
+                setProjects(result)
                 actions.setSubmitting(false)
                 onClose()
                 toast({

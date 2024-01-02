@@ -9,17 +9,46 @@ import { logFetch, logTerminalMockMessage } from "../utils"
 import FetchInterceptor from "./fetch"
 
 export const config: PlasmoCSConfig = {
-  // all urls
   matches: ["<all_urls>"],
   world: "MAIN",
   run_at: "document_start"
 }
+function getCurrentProject() {
+  const inputElem = document.getElementById(
+    INJECT_ELEMENT_ID
+  ) as HTMLInputElement
+  console.log("inputElem", inputElem)
+  if (!inputElem) {
+    return {}
+  }
+  const configStr = inputElem.value
+
+  try {
+    const config = JSON.parse(configStr)
+    const { mockgenius_current_project, mock_genius_projects } = config
+    const curProject =
+      mock_genius_projects?.find(
+        (item: { baseUrl: string }) =>
+          item.baseUrl === mockgenius_current_project
+      ) || {}
+
+    console.log("curProject", curProject)
+    return curProject
+  } catch (e) {
+    return {}
+  }
+}
+const currentProject = getCurrentProject()
+console.log(
+  "%c [ currentProject ]-42",
+  "font-size:13px; background:pink; color:#bf2c9f;",
+  currentProject
+)
 
 console.log("inject.ts")
-async function mockCore(url, method) {
+async function mockCore(url: string, method: string) {
   const targetUrl = new Url(url)
   const str = targetUrl.pathname
-  const currentProject = getCurrentProject()
   if (currentProject?.switchOn) {
     const rules = currentProject.rules || []
     const currentRule = rules.find((item) => {
@@ -81,41 +110,17 @@ function handMockResult({ res, request, config }) {
   return { result, payload }
 }
 
-function getCurrentProject() {
-  const inputElem = document.getElementById(
-    INJECT_ELEMENT_ID
-  ) as HTMLInputElement
-  if (!inputElem) {
-    return {}
-  }
-  const configStr = inputElem.value
-  try {
-    const config = JSON.parse(configStr)
-    const { mockgenius_current_project, mock_genius_projects } = config
-    const curProject =
-      mock_genius_projects?.find(
-        (item: { pathUrl: string }) =>
-          item.pathUrl === mockgenius_current_project
-      ) || {}
-
-    return curProject
-  } catch (e) {
-    return {}
-  }
-}
-
 proxy({
   onRequest: async (config, handler) => {
-    console.log("config", config)
-    if (!getCurrentProject().switchOn) {
+    if (!currentProject.switchOn) {
       handler.next(config)
       return
     }
-    if (Object.getOwnPropertyNames(getCurrentProject()).length === 0) {
+    if (Object.getOwnPropertyNames(currentProject).length === 0) {
       handler.next(config)
       return
     }
-    if (getCurrentProject().isRealRequest ?? false) {
+    if (currentProject.isRealRequest ?? false) {
       handler.next(config)
     } else {
       const url = new Url(config.url)
@@ -144,11 +149,11 @@ proxy({
   },
   //请求发生错误时进入，比如超时；注意，不包括http状态码错误，如404仍然会认为请求成功
   onError: async (err, handler) => {
-    if (!getCurrentProject().switchOn) {
+    if (!currentProject.switchOn) {
       handler.next(err)
       return
     }
-    if (Object.getOwnPropertyNames(getCurrentProject()).length === 0) {
+    if (Object.getOwnPropertyNames(currentProject).length === 0) {
       handler.next(err)
       return
     }
@@ -161,11 +166,11 @@ proxy({
     handler.next(err)
   },
   onResponse: async (response, handler) => {
-    if (!getCurrentProject().switchOn) {
+    if (!currentProject.switchOn) {
       handler.resolve(response)
       return
     }
-    if (Object.getOwnPropertyNames(getCurrentProject()).length === 0) {
+    if (Object.getOwnPropertyNames(currentProject).length === 0) {
       handler.resolve(response)
       return
     }
@@ -311,6 +316,6 @@ if (window.fetch !== undefined) {
         sendMsg(payload)
       }
     },
-    getCurrentProject().isRealRequest
+    currentProject.isRealRequest
   )
 }

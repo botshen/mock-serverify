@@ -25,6 +25,7 @@ interface ProjectType {
   baseUrl: string
   description: string
   rules?: Rule[]
+  switchOn?: boolean
 }
 declare module "*.png" {
   const value: string

@@ -16,11 +16,11 @@ export default class FetchInterceptor {
    */
   constructor() {
     const ENVIRONMENT_IS_REACT_NATIVE =
-      typeof navigator === 'object' && navigator.product === 'ReactNative'
+      typeof navigator === "object" && navigator.product === "ReactNative"
     const ENVIRONMENT_IS_NODE =
-      typeof process === 'object' && typeof require === 'function'
-    const ENVIRONMENT_IS_WEB = typeof window === 'object'
-    const ENVIRONMENT_IS_WORKER = typeof importScripts === 'function'
+      typeof process === "object" && typeof require === "function"
+    const ENVIRONMENT_IS_WEB = typeof window === "object"
+    const ENVIRONMENT_IS_WORKER = typeof importScripts === "function"
 
     if (ENVIRONMENT_IS_REACT_NATIVE) {
       this.env = global
@@ -31,7 +31,7 @@ export default class FetchInterceptor {
     } else if (ENVIRONMENT_IS_NODE) {
       this.env = global
     } else {
-      throw new Error('Unsupported environment for fetch-intercept')
+      throw new Error("Unsupported environment for fetch-intercept")
     }
 
     this.fetch = this.env.fetch
@@ -40,7 +40,7 @@ export default class FetchInterceptor {
   /**
    * Whitelist hooks
    */
-  static hooks = ['onBeforeRequest', 'onRequestSuccess', 'onRequestFailure']
+  static hooks = ["onBeforeRequest", "onRequestSuccess", "onRequestFailure"]
 
   /**
    * Register intercept hooks & return an interceptor instance
@@ -54,7 +54,7 @@ export default class FetchInterceptor {
     const interceptor = new this()
     for (let i = 0; i < this.hooks.length; i++) {
       const hook = this.hooks[i]
-      if (typeof hooks[hook] === 'function') {
+      if (typeof hooks[hook] === "function") {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         interceptor[hook] = hooks[hook]
@@ -85,21 +85,21 @@ export default class FetchInterceptor {
       if (a[0] instanceof Request) {
         const object = {}
         ;[
-          'cache',
-          'context',
-          'credentials',
-          'destination',
-          'headers',
-          'integrity',
-          'method',
-          'mode',
-          'redirect',
-          'referrer',
-          'referrerPolicy',
-          'url',
-          'body',
-          'bodyUsed',
-        ].forEach(prop => {
+          "cache",
+          "context",
+          "credentials",
+          "destination",
+          "headers",
+          "integrity",
+          "method",
+          "mode",
+          "redirect",
+          "referrer",
+          "referrerPolicy",
+          "url",
+          "body",
+          "bodyUsed"
+        ].forEach((prop) => {
           if (prop in a[0]) {
             object[prop] = a[0][prop]
           }
@@ -111,14 +111,14 @@ export default class FetchInterceptor {
         const url = a[0]
         const options = {
           ...a[1],
-          signal,
+          signal
         }
         request = new Request(url, options)
       }
       /** TODO: start 改造 fetch request start 的位置 xyy */
       let beforeReqPromise
 
-      if (typeof this.onBeforeRequest === 'function') {
+      if (typeof this.onBeforeRequest === "function") {
         beforeReqPromise = this.onBeforeRequest(request, controller)
       }
       // 如果 request 之前返回了 promise, 则将 promise 给
@@ -126,17 +126,17 @@ export default class FetchInterceptor {
       const promise = this.isRealRequest
         ? this.fetch.call(this.env, request)
         : beforeReqPromise
-            .then(res => res)
+            .then((res) => res)
             .catch(() => {
               return this.fetch.call(this.env, request)
             })
-      if (typeof this.onAfterRequest === 'function') {
+      if (typeof this.onAfterRequest === "function") {
         this.onAfterRequest(request, controller)
       }
 
       /** end 改造 fetch request end 的位置, 需要把 promise  xyy */
       return promise
-        .then(async response => {
+        .then(async (response) => {
           if (this.isRealRequest) {
             try {
               const mockResponse = await beforeReqPromise
@@ -148,18 +148,18 @@ export default class FetchInterceptor {
             }
           }
           if (response.ok) {
-            if (typeof this.onRequestSuccess === 'function') {
+            if (typeof this.onRequestSuccess === "function") {
               this.onRequestSuccess(response, request, controller)
             }
           } else {
-            if (typeof this.onRequestFailure === 'function') {
+            if (typeof this.onRequestFailure === "function") {
               this.onRequestFailure(response, request, controller)
             }
           }
           return response
         })
-        .catch(error => {
-          if (typeof this.onRequestFailure === 'function') {
+        .catch((error) => {
+          if (typeof this.onRequestFailure === "function") {
             this.onRequestFailure(error, request, controller)
           }
           throw error

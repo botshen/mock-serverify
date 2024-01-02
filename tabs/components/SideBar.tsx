@@ -1,4 +1,4 @@
-import { List, ListIcon, ListItem, Text } from "@chakra-ui/react"
+import { List, ListIcon, ListItem, Text, useColorMode } from "@chakra-ui/react"
 import React from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 
@@ -25,6 +25,14 @@ const SideBar = () => {
       navigate(link)
     }
   }
+  const { colorMode } = useColorMode()
+  const color = () => {
+    if (colorMode === "light") {
+      return "#43787a"
+    } else {
+      return "#9ae4d9"
+    }
+  }
 
   return (
     <List spacing={3} padding="20px">
@@ -33,6 +41,7 @@ const SideBar = () => {
           <ListItem
             cursor="pointer"
             fontWeight={location.pathname === val.link ? "bold" : "normal"}
+            color={location.pathname === val.link ? color() : ""}
             borderRadius="4px"
             padding="4px"
             key={val.name}>
