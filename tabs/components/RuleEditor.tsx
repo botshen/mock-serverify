@@ -15,7 +15,7 @@ import {
   VStack
 } from "@chakra-ui/react"
 import { Field, Form, Formik } from "formik"
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 
 import { useStorage } from "@plasmohq/storage/hook"
@@ -25,14 +25,13 @@ import { defaultValueFunction, storageConfig } from "~tabs/store"
 import ResponseEditors from "./ResponseEditor"
 
 const RuleEditor = () => {
-  const { baseUrl, pathRule, mode } = useLocation().state
+  const { baseUrl, pathRule, mode, row } = useLocation().state
   const navigation = useNavigate()
   const [projects, setProjects] = useStorage<ProjectType[]>(
     storageConfig,
     defaultValueFunction
   )
-
-  const geneRule = () => {
+  const geneRule = useMemo(() => {
     if (mode === "add") {
       return {
         pathRule: "",
@@ -41,12 +40,21 @@ const RuleEditor = () => {
         code: "",
         Comments: ""
       }
+    } else if (mode === "log") {
+      console.log("row", row)
+      return {
+        pathRule: row.url,
+        Method: row.method,
+        Delay: 0,
+        code: row.status,
+        Comments: ""
+      }
     } else {
       return projects
         ?.find((i) => i.baseUrl === baseUrl)
         ?.rules?.find((i) => i.pathRule === pathRule)
     }
-  }
+  }, [mode])
 
   const validateName = (value: string) => {
     let error: string
@@ -59,58 +67,45 @@ const RuleEditor = () => {
     navigation(-1)
   }
 
-  const jsonData = geneRule()?.json ?? {}
-  console.log(
-    "%c [ jsonData ]-62",
-    "font-size:13px; background:pink; color:#bf2c9f;",
-    jsonData
-  )
-  // const [content, setContent] = useState(() => {
-  //   if (JSON.stringify(jsonData) === "{}") {
-  //     return {
-  //       json: {},
-  //       text: undefined,
-  //       textAreaValue: jsonData
-  //     }
-  //   }
-  //   return {
-  //     json: JSON.parse(jsonData),
-  //     text: undefined,
-  //     textAreaValue: jsonData
-  //   }
-  // })
-  // useEffect(() => {
-  //   //如果jsonData是空对象就不用更新了
-  //   if (JSON.stringify(jsonData) === "{}") {
-  //     setContent({
-  //       json: {},
-  //       text: undefined,
-  //       textAreaValue: jsonData
-  //     })
-  //   } else {
-  //     setContent({
-  //       json: JSON.parse(jsonData),
-  //       text: undefined,
-  //       textAreaValue: jsonData
-  //     })
-  //   }
-  // }, [jsonData])
+  const jsonDataMemo = useMemo(() => {
+    if (mode === "add") {
+      return {
+        json: {},
+        text: undefined,
+        textAreaValue: jsonData
+      }
+    } else if (mode === "log") {
+      return {
+        json: JSON.parse(row.Response),
+        text: undefined,
+        textAreaValue: undefined
+      }
+    } else {
+      return (
+        projects
+          ?.find((i) => i.baseUrl === baseUrl)
+          ?.rules?.find((i) => i.pathRule === pathRule)?.json ?? {}
+      )
+    }
+  }, [mode])
+  const [jsonData, setJsonData] = useState(jsonDataMemo)
+
   return (
     <>
       <VStack padding="20px" height="500px">
-        {geneRule() && (
+        {geneRule && (
           <Formik
             initialValues={{
-              pathRule: geneRule().pathRule,
-              Method: geneRule().Method,
-              Delay: geneRule().Delay,
-              code: geneRule().code,
-              Comments: geneRule().Comments
+              pathRule: geneRule.pathRule,
+              Method: geneRule.Method,
+              Delay: geneRule.Delay,
+              code: geneRule.code,
+              Comments: geneRule.Comments
             }}
             onSubmit={(values, actions) => {
               const formData = {
-                ...values
-                // json: content.text
+                ...values,
+                json: JSON.parse(jsonData.text)
               }
               const isExist = projects
                 ?.find((i) => i.baseUrl === baseUrl)
@@ -186,8 +181,8 @@ const RuleEditor = () => {
                           isInvalid={form.errors.Method && form.touched.Method}>
                           <FormLabel>Method</FormLabel>
                           <Select {...field} placeholder="Select option">
-                            <option value="get">get</option>
-                            <option value="post">post</option>
+                            <option value="GET">get</option>
+                            <option value="POST">post</option>
                           </Select>
                           <FormErrorMessage>
                             {form.errors.Method}
@@ -248,14 +243,14 @@ const RuleEditor = () => {
                     </Field>
                   </Box>
                 </Grid>
-                {/* <ResponseEditors
-                  content={content}
+                <ResponseEditors
+                  content={jsonData}
                   readOnly={false}
-                  onChange={setContent}
                   mode="text"
+                  onChange={setJsonData}
                   mainMenuBar={false}
                   statusBar={false}
-                /> */}
+                />
                 <HStack mt={4} mb={4}>
                   <Spacer />
                   <Button onClick={handleCancel}>cancel</Button>

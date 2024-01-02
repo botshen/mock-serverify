@@ -32,7 +32,12 @@ export default function Logs() {
   const navigation = useNavigate()
 
   const handleRowClick = (row) => {
-    navigation("edit")
+    navigation("/editRule", {
+      state: {
+        row,
+        mode: "log"
+      }
+    })
   }
   const clearLogs = () => {
     setLogs([])
