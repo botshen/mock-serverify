@@ -1,3 +1,5 @@
+import Url from "url-parse"
+
 import { Storage } from "@plasmohq/storage"
 
 import {
@@ -48,17 +50,6 @@ const storage = new Storage({
 
 ;(async () => {
   const currentNameUrl = await storage.get(AJAX_INTERCEPTOR_CURRENT_PROJECT)
-  console.log(
-    "%c [ currentNameUrl ]-58",
-    "font-size:13px; background:pink; color:#bf2c9f;",
-    currentNameUrl
-  )
-  const { origin } = location
-  console.log(
-    "%c [ origin ]-59",
-    "font-size:13px; background:pink; color:#bf2c9f;",
-    origin
-  )
   if (origin === currentNameUrl) {
     injectScriptToPage()
     setGlobalData()
@@ -71,7 +62,11 @@ window.addEventListener(
     if (chrome.runtime?.id) {
       try {
         const customEvent = event as CustomEvent
-        if (customEvent.detail) {
+        const currentNameUrl = await storage.get(
+          AJAX_INTERCEPTOR_CURRENT_PROJECT
+        )
+        const { origin } = location
+        if (customEvent.detail && origin === currentNameUrl) {
           await chrome.runtime.sendMessage({
             type: "ajaxInterceptor",
             message: "content_to_background",

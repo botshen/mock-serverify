@@ -3,21 +3,25 @@ import { parse, stringify } from "flatted"
 import type { PlasmoCSConfig } from "plasmo"
 import Url from "url-parse"
 
-import { CUSTOM_EVENT_NAME, INJECT_ELEMENT_ID } from "../const"
+import {
+  AJAX_INTERCEPTOR_CURRENT_PROJECT,
+  AJAX_INTERCEPTOR_PROJECTS,
+  CUSTOM_EVENT_NAME,
+  INJECT_ELEMENT_ID
+} from "../const"
 // import { notification } from 'antd';
 import { logFetch, logTerminalMockMessage } from "../utils"
 import FetchInterceptor from "./fetch"
 
-export const config: PlasmoCSConfig = {
-  matches: ["<all_urls>"],
-  world: "MAIN",
-  run_at: "document_start"
-}
+// export const config: PlasmoCSConfig = {
+//   matches: ["<all_urls>"],
+//   world: "MAIN",
+//   run_at: "document_start"
+// }
 function getCurrentProject() {
   const inputElem = document.getElementById(
     INJECT_ELEMENT_ID
   ) as HTMLInputElement
-  console.log("inputElem", inputElem)
   if (!inputElem) {
     return {}
   }
@@ -32,18 +36,12 @@ function getCurrentProject() {
           item.baseUrl === mockgenius_current_project
       ) || {}
 
-    console.log("curProject", curProject)
     return curProject
   } catch (e) {
     return {}
   }
 }
 const currentProject = getCurrentProject()
-console.log(
-  "%c [ currentProject ]-42",
-  "font-size:13px; background:pink; color:#bf2c9f;",
-  currentProject
-)
 
 console.log("inject.ts")
 async function mockCore(url: string, method: string) {
@@ -59,7 +57,7 @@ async function mockCore(url: string, method: string) {
         med === method &&
         item?.switchOn &&
         str === pathname &&
-        currentProject.pathUrl === pathRule.origin
+        currentProject.baseUrl === pathRule.origin
       )
     })
 

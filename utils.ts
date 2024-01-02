@@ -142,8 +142,6 @@ export const injectScriptToPage = () => {
     }
     let insertScript = document.createElement("script")
     insertScript.setAttribute("type", "module")
-    // log
-    console.log("insertUrl============")
     insertScript.src = insertUrl
 
     document.documentElement.appendChild(insertScript)
