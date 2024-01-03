@@ -45,35 +45,59 @@ const currentProject = getCurrentProject()
 
 console.log("inject.ts")
 async function mockCore(url: string, method: string) {
+  console.log(
+    "%c [ method ]-48",
+    "font-size:13px; background:pink; color:#bf2c9f;",
+    method
+  )
+  console.log(
+    "%c [ url ]-48",
+    "font-size:13px; background:pink; color:#bf2c9f;",
+    url
+  )
   const targetUrl = new Url(url)
   const str = targetUrl.pathname
+  console.log(
+    "%c [ str ]-60",
+    "font-size:13px; background:pink; color:#bf2c9f;",
+    str
+  )
   if (currentProject?.switchOn) {
     const rules = currentProject.rules || []
+    console.log(
+      "%c [ rules ]-67",
+      "font-size:13px; background:pink; color:#bf2c9f;",
+      rules
+    )
+    console.log("rules", rules)
     const currentRule = rules.find((item) => {
-      const med = item.method.toUpperCase()
+      const med = item.Method.toUpperCase()
       const pathRule = new Url(item.pathRule)
       const pathname = pathRule.pathname
       return (
         med === method &&
-        item?.switchOn &&
+        // item?.switchOn &&
         str === pathname &&
         currentProject.baseUrl === pathRule.origin
       )
     })
+    console.log("currentRule", currentRule)
 
     if (currentRule) {
       await new Promise((resolve) =>
         setTimeout(resolve, currentRule.delay || 0)
       )
       return {
-        response: currentRule.Response,
+        response: currentRule.json,
         path: currentRule.pathRule,
         status: currentRule.code,
         headers: currentRule.responseHeaders
       }
     }
+  } else {
+    console.log("没有匹配的规则")
+    throw new Error("没有匹配的规则")
   }
-  throw new Error("没有匹配的规则")
 }
 const sendMsg = (msg, isMock = false) => {
   const result = {
@@ -93,6 +117,7 @@ function handMockResult({ res, request, config }) {
     headers: headers ?? [],
     response: response
   }
+  console.log("result", result)
 
   const payload = {
     request,
@@ -110,6 +135,8 @@ function handMockResult({ res, request, config }) {
 
 proxy({
   onRequest: async (config, handler) => {
+    console.log("config", config)
+    console.log("currentProject", currentProject)
     if (!currentProject.switchOn) {
       handler.next(config)
       return
@@ -121,6 +148,7 @@ proxy({
     if (currentProject.isRealRequest ?? false) {
       handler.next(config)
     } else {
+      console.log("mock")
       const url = new Url(config.url)
       const request = {
         url: url.href,
@@ -128,8 +156,14 @@ proxy({
         headers: config.headers,
         type: "xhr"
       }
+      console.log("request", request)
       try {
         const res = await mockCore(url.href, config.method)
+        console.log(
+          "%c [ res ]-137",
+          "font-size:13px; background:pink; color:#bf2c9f;",
+          res
+        )
         const { payload, result } = handMockResult({ res, request, config })
         sendMsg(payload, true)
         logTerminalMockMessage(config, result, request)

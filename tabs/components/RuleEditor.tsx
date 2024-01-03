@@ -38,6 +38,11 @@ const RuleEditor = () => {
     }
     return error
   }
+  const validateComment = (value: string) => {
+    let error: string
+
+    return error
+  }
   const validateDelayName = (value: number) => {
     let error: string
     if (!value && value !== 0) {
@@ -79,6 +84,7 @@ const RuleEditor = () => {
   }, [mode, projects])
 
   const jsonDataMemo = useMemo(() => {
+    console.log("mode", mode)
     if (mode === "add") {
       return {
         json: {},
@@ -86,15 +92,38 @@ const RuleEditor = () => {
         textAreaValue: jsonData
       }
     } else if (mode === "log") {
-      return {
-        json: JSON.parse(row.Response),
-        text: undefined,
-        textAreaValue: undefined
+      console.log("row.Response", row.Response)
+      const jsonData = row.Response
+      if (!jsonData) {
+        return {
+          json: undefined,
+          text: "",
+          textAreaValue: ""
+        }
+      }
+      if (typeof jsonData === "object") {
+        return {
+          json: jsonData,
+          text: undefined,
+          textAreaValue: JSON.stringify(jsonData)
+        }
+      } else {
+        try {
+          const parse = JSON.parse(jsonData)
+          return {
+            json: parse,
+            text: undefined,
+            textAreaValue: jsonData
+          }
+        } catch (error) {
+          return {
+            json: undefined,
+            text: jsonData,
+            textAreaValue: jsonData
+          }
+        }
       }
     } else {
-      console.log("projects", projects)
-      console.log("baseUrl", baseUrl)
-      console.log("pathRule", pathRule)
       const json = projects
         ?.find((i) => i.baseUrl === baseUrl)
         ?.rules?.find((i) => i.pathRule === pathRule)?.json
@@ -114,7 +143,6 @@ const RuleEditor = () => {
         }
       }
 
-      console.log("result", result)
       return result
     }
   }, [mode, projects])
@@ -136,9 +164,15 @@ const RuleEditor = () => {
               Comments: geneRule.Comments
             }}
             onSubmit={(values, actions) => {
+              let json
+              if (jsonData.json) {
+                json = jsonData.json
+              } else {
+                json = JSON.parse(jsonData.text)
+              }
               const formData = {
                 ...values,
-                json: jsonData.json
+                json
               }
               const isExist = projects
                 ?.find((i) => i.baseUrl === baseUrl)
@@ -176,9 +210,7 @@ const RuleEditor = () => {
                 )
               }
               if (mode === "log") {
-                console.log("baseUrl", baseUrl)
                 const _val = projects.map((item) => {
-                  console.log("item.baseUrl", item.baseUrl)
                   if (item.baseUrl === baseUrl) {
                     if (!item.rules) item.rules = []
                     //如果之前存在相同的pathRule，进行替换
@@ -201,7 +233,6 @@ const RuleEditor = () => {
                   }
                   return item
                 })
-                console.log("_val", _val)
                 setProjects(_val)
                 actions.setSubmitting(false)
                 navigation("../savedRules", {
@@ -296,7 +327,7 @@ const RuleEditor = () => {
                     </Field>
                   </Box>
                   <Box>
-                    <Field name="Comments" validate={validateName}>
+                    <Field name="Comments" validate={validateComment}>
                       {({ field, form }) => (
                         <FormControl
                           isInvalid={
