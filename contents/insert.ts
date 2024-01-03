@@ -80,7 +80,7 @@ async function mockCore(url: string, method: string) {
 
     if (currentRule) {
       await new Promise((resolve) =>
-        setTimeout(resolve, currentRule.delay || 0)
+        setTimeout(resolve, currentRule.Delay || 0)
       )
       return {
         response: currentRule.json,
