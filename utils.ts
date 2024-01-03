@@ -23,7 +23,7 @@ export function logTerminalMockMessage(
 ) {
   const targetUrl = new Url(request.url)
   const str = targetUrl.pathname
-  const css = "font-size:13px; background:pink; color:#bf2c9f;"
+  const css = "font-size:13px; background:#d5562e; color:#fff;"
   console.log(
     `%c [ URL ] %c${str} %c [ METHOD ] %c${request.method}`,
     css, // 样式1，用于 'URL:'

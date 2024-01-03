@@ -1,5 +1,6 @@
 import { createHashRouter, Navigate } from "react-router-dom"
 
+import About from "~tabs/about"
 import RuleEditor from "~tabs/components/RuleEditor"
 import Logs from "~tabs/Logs"
 import Main from "~tabs/main"
@@ -32,6 +33,10 @@ export const globalRouters = createHashRouter([
       {
         path: "settings",
         element: <Setting />
+      },
+      {
+        path: "about",
+        element: <About />
       },
       {
         path: "logs",

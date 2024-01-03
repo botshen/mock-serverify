@@ -13,11 +13,6 @@ import {
 import { logFetch, logTerminalMockMessage } from "../utils"
 import FetchInterceptor from "./fetch"
 
-// export const config: PlasmoCSConfig = {
-//   matches: ["<all_urls>"],
-//   world: "MAIN",
-//   run_at: "document_start"
-// }
 function getCurrentProject() {
   const inputElem = document.getElementById(
     INJECT_ELEMENT_ID
