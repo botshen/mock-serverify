@@ -31,6 +31,26 @@ const RuleEditor = () => {
     storageConfig,
     defaultValueFunction
   )
+  const validateName = (value: string) => {
+    let error: string
+    if (!value) {
+      error = "Value is required"
+    }
+    return error
+  }
+  const validateDelayName = (value: number) => {
+    let error: string
+    if (!value && value !== 0) {
+      error = "Value is required"
+    }
+    if (isNaN(Number(value))) {
+      error = "Value is not a number"
+    }
+    return error
+  }
+  const handleCancel = () => {
+    navigation(-1)
+  }
   const geneRule = useMemo(() => {
     if (mode === "add") {
       return {
@@ -50,22 +70,13 @@ const RuleEditor = () => {
         Comments: ""
       }
     } else {
-      return projects
-        ?.find((i) => i.baseUrl === baseUrl)
-        ?.rules?.find((i) => i.pathRule === pathRule)
+      if (projects.length !== 0) {
+        return projects
+          ?.find((i) => i.baseUrl === baseUrl)
+          ?.rules?.find((i) => i.pathRule === pathRule)
+      }
     }
-  }, [mode])
-
-  const validateName = (value: string) => {
-    let error: string
-    if (!value) {
-      error = "Name is required"
-    }
-    return error
-  }
-  const handleCancel = () => {
-    navigation(-1)
-  }
+  }, [mode, projects])
 
   const jsonDataMemo = useMemo(() => {
     if (mode === "add") {
@@ -81,13 +92,35 @@ const RuleEditor = () => {
         textAreaValue: undefined
       }
     } else {
-      return (
-        projects
-          ?.find((i) => i.baseUrl === baseUrl)
-          ?.rules?.find((i) => i.pathRule === pathRule)?.json ?? {}
-      )
+      console.log("projects", projects)
+      console.log("baseUrl", baseUrl)
+      console.log("pathRule", pathRule)
+      const json = projects
+        ?.find((i) => i.baseUrl === baseUrl)
+        ?.rules?.find((i) => i.pathRule === pathRule)?.json
+      let result
+      console.log("json", json)
+      if (json) {
+        result = {
+          json: json,
+          text: undefined,
+          textAreaValue: undefined
+        }
+      } else {
+        result = {
+          json: {},
+          text: undefined,
+          textAreaValue: undefined
+        }
+      }
+
+      console.log("result", result)
+      return result
     }
-  }, [mode])
+  }, [mode, projects])
+  useEffect(() => {
+    setJsonData(jsonDataMemo)
+  }, [jsonDataMemo])
   const [jsonData, setJsonData] = useState(jsonDataMemo)
 
   return (
@@ -105,7 +138,7 @@ const RuleEditor = () => {
             onSubmit={(values, actions) => {
               const formData = {
                 ...values,
-                json: JSON.parse(jsonData.text)
+                json: jsonData.json
               }
               const isExist = projects
                 ?.find((i) => i.baseUrl === baseUrl)
@@ -141,6 +174,42 @@ const RuleEditor = () => {
                     return item
                   })
                 )
+              }
+              if (mode === "log") {
+                console.log("baseUrl", baseUrl)
+                const _val = projects.map((item) => {
+                  console.log("item.baseUrl", item.baseUrl)
+                  if (item.baseUrl === baseUrl) {
+                    if (!item.rules) item.rules = []
+                    //如果之前存在相同的pathRule，进行替换
+                    const isExist = item.rules.find(
+                      (i) => i.pathRule === formData.pathRule
+                    )
+                    if (isExist) {
+                      item.rules = item.rules.map((i) => {
+                        if (i.pathRule === formData.pathRule) {
+                          return formData
+                        }
+                        return i
+                      })
+                      alert(
+                        "The pathRule already exists and has been overwritten"
+                      )
+                    } else {
+                      item.rules.push(formData)
+                    }
+                  }
+                  return item
+                })
+                console.log("_val", _val)
+                setProjects(_val)
+                actions.setSubmitting(false)
+                navigation("../savedRules", {
+                  state: projects?.find(
+                    (project) => project.baseUrl === baseUrl
+                  )
+                })
+                return
               }
               actions.setSubmitting(false)
               handleCancel()
@@ -192,7 +261,7 @@ const RuleEditor = () => {
                     </Field>
                   </Box>
                   <Box>
-                    <Field name="Delay" validate={validateName}>
+                    <Field name="Delay" validate={validateDelayName}>
                       {({ field, form }) => (
                         <FormControl
                           isInvalid={form.errors.Delay && form.touched.Delay}>

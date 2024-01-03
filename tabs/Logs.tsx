@@ -17,7 +17,12 @@ import { useLocation, useNavigate } from "react-router-dom"
 
 import { useStorage } from "@plasmohq/storage/hook"
 
-import { defaultLogsFunction, storageLogsConfig } from "./store"
+import {
+  defaultCurrent,
+  defaultLogsFunction,
+  storageCurrentConfig,
+  storageLogsConfig
+} from "./store"
 
 export default function Logs() {
   const location = useLocation()
@@ -28,6 +33,7 @@ export default function Logs() {
   )
 
   const [logs, setLogs] = useStorage(storageLogsConfig, defaultLogsFunction)
+  const [currentProject] = useStorage(storageCurrentConfig, defaultCurrent)
 
   const navigation = useNavigate()
 
@@ -35,7 +41,8 @@ export default function Logs() {
     navigation("/editRule", {
       state: {
         row,
-        mode: "log"
+        mode: "log",
+        baseUrl: currentProject
       }
     })
   }

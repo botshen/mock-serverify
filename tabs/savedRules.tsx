@@ -3,6 +3,7 @@ import {
   Switch,
   Table,
   TableContainer,
+  Tag,
   Tbody,
   Td,
   Th,
@@ -75,7 +76,15 @@ export default function SavedRules() {
                   <Tr key={pathRule}>
                     <Td fontSize={fontSize}>{Comments}</Td>
                     <Td fontSize={fontSize}>{pathRule}</Td>
-                    <Td fontSize={fontSize}>{Method}</Td>
+                    <Td fontSize={fontSize}>
+                      <Tag
+                        size="md"
+                        key={Method}
+                        variant="solid"
+                        colorScheme="teal">
+                        {Method}
+                      </Tag>
+                    </Td>
                     <Td fontSize={fontSize}>{code}</Td>
                     <Td fontSize={fontSize}>
                       <Switch
