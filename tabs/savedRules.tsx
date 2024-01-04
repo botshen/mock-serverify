@@ -61,11 +61,11 @@ export default function SavedRules() {
         <Table variant="simple">
           <Thead>
             <Tr>
-              <Th fontSize={fontSize}>Comment</Th>
               <Th fontSize={fontSize}>Url</Th>
               <Th fontSize={fontSize}>Method</Th>
               <Th fontSize={fontSize}>Code</Th>
               <Th fontSize={fontSize}>SwitchOn</Th>
+              <Th fontSize={fontSize}>Comment</Th>
               <Th fontSize={fontSize}>Action</Th>
             </Tr>
           </Thead>
@@ -74,7 +74,6 @@ export default function SavedRules() {
               rules.map(
                 ({ Comments, pathRule, Method, code, switchOn }, index) => (
                   <Tr key={pathRule}>
-                    <Td fontSize={fontSize}>{Comments}</Td>
                     <Td fontSize={fontSize}>{pathRule}</Td>
                     <Td fontSize={fontSize}>
                       <Tag
@@ -93,6 +92,7 @@ export default function SavedRules() {
                         colorScheme="red"
                       />
                     </Td>
+                    <Td fontSize={fontSize}>{Comments || "none"}</Td>
                     <Td fontSize={fontSize}>
                       <EditIcon
                         onClick={() => handleEdit(pathRule)}

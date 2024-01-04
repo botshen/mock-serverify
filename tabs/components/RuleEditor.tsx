@@ -17,6 +17,7 @@ import {
 import { Field, Form, Formik } from "formik"
 import { useEffect, useMemo, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
+import Url from "url-parse"
 
 import { useStorage } from "@plasmohq/storage/hook"
 
@@ -150,7 +151,21 @@ const RuleEditor = () => {
     setJsonData(jsonDataMemo)
   }, [jsonDataMemo])
   const [jsonData, setJsonData] = useState(jsonDataMemo)
-
+  const updateRule = (formData: any) => {
+    chrome.tabs.query({}, function (tabs) {
+      const targetTabId = tabs.find((i) => new Url(i.url).origin === baseUrl)
+        ?.id
+      if (targetTabId) {
+        chrome.tabs.sendMessage(targetTabId, {
+          type: "updateRules",
+          payload: {
+            baseUrl,
+            formData
+          }
+        })
+      }
+    })
+  }
   return (
     <>
       <VStack padding="20px" height="500px">
@@ -163,7 +178,7 @@ const RuleEditor = () => {
               code: geneRule.code,
               Comments: geneRule.Comments
             }}
-            onSubmit={(values, actions) => {
+            onSubmit={async (values, actions) => {
               let json
               if (jsonData.json) {
                 json = jsonData.json
@@ -234,14 +249,18 @@ const RuleEditor = () => {
                   return item
                 })
                 setProjects(_val)
-                actions.setSubmitting(false)
+              }
+              if (mode === "log") {
+                updateRule(formData)
                 navigation("../savedRules", {
                   state: projects?.find(
                     (project) => project.baseUrl === baseUrl
                   )
                 })
+                actions.setSubmitting(false)
                 return
               }
+              updateRule(formData)
               actions.setSubmitting(false)
               handleCancel()
             }}>

@@ -3,6 +3,8 @@ import { parse, stringify } from "flatted"
 import type { PlasmoCSConfig } from "plasmo"
 import Url from "url-parse"
 
+import { logFetch, logTerminalMockMessage } from "~tabs/utils"
+
 import {
   AJAX_INTERCEPTOR_CURRENT_PROJECT,
   AJAX_INTERCEPTOR_PROJECTS,
@@ -10,7 +12,6 @@ import {
   INJECT_ELEMENT_ID
 } from "../const"
 // import { notification } from 'antd';
-import { logFetch, logTerminalMockMessage } from "../utils"
 import FetchInterceptor from "./fetch"
 
 function getCurrentProject() {
@@ -21,6 +22,11 @@ function getCurrentProject() {
     return {}
   }
   const configStr = inputElem.value
+  console.log(
+    "%c [ configStr ]-25",
+    "font-size:13px; background:pink; color:#bf2c9f;",
+    configStr
+  )
 
   try {
     const config = JSON.parse(configStr)
@@ -36,7 +42,7 @@ function getCurrentProject() {
     return {}
   }
 }
-const currentProject = getCurrentProject()
+// const currentProject = getCurrentProject()
 
 console.log("inject.ts")
 async function mockCore(url: string, method: string) {
@@ -57,6 +63,7 @@ async function mockCore(url: string, method: string) {
     "font-size:13px; background:pink; color:#bf2c9f;",
     str
   )
+  const currentProject = getCurrentProject()
   if (currentProject?.switchOn) {
     const rules = currentProject.rules || []
     console.log(
@@ -131,6 +138,7 @@ function handMockResult({ res, request, config }) {
 proxy({
   onRequest: async (config, handler) => {
     console.log("config", config)
+    const currentProject = getCurrentProject()
     console.log("currentProject", currentProject)
     if (!currentProject.switchOn) {
       handler.next(config)
@@ -176,6 +184,7 @@ proxy({
   },
   //请求发生错误时进入，比如超时；注意，不包括http状态码错误，如404仍然会认为请求成功
   onError: async (err, handler) => {
+    const currentProject = getCurrentProject()
     if (!currentProject.switchOn) {
       handler.next(err)
       return
@@ -193,6 +202,7 @@ proxy({
     handler.next(err)
   },
   onResponse: async (response, handler) => {
+    const currentProject = getCurrentProject()
     if (!currentProject.switchOn) {
       handler.resolve(response)
       return
@@ -243,106 +253,103 @@ proxy({
 })
 
 if (window.fetch !== undefined) {
-  FetchInterceptor.register(
-    {
-      async onBeforeRequest(request: { url: string; method: string }) {
-        const res = await mockCore(request.url, request.method)
-        try {
-          const { path: rulePath } = res
-          // @ts-ignore
-          const response: CustomResponse = new Response()
-          response.isMock = true
-          response.rulePath = rulePath
-          if (typeof res.response === "string") {
-            response.text = res.response
-          } else if (typeof res.response === "object") {
-            response.json = () => Promise.resolve(res.response)
-          }
-          return response
-        } catch (err) {
-          // console.error(err);
+  FetchInterceptor.register({
+    async onBeforeRequest(request: { url: string; method: string }) {
+      const res = await mockCore(request.url, request.method)
+      try {
+        const { path: rulePath } = res
+        // @ts-ignore
+        const response: CustomResponse = new Response()
+        response.isMock = true
+        response.rulePath = rulePath
+        if (typeof res.response === "string") {
+          response.text = res.response
+        } else if (typeof res.response === "object") {
+          response.json = () => Promise.resolve(res.response)
         }
-      },
-      onRequestSuccess(response, request) {
-        const payload = {
-          request: {
-            type: "fetch",
-            method: request.method,
-            url: request.url,
-            headers: request.headers
-          },
-          response: {
-            status: response.status,
-            statusText: response.statusText,
-            url: response.url,
-            headers: response.headers,
-            responseTxt: "",
-            isMock: false,
-            rulePath: ""
-          }
-        }
-
-        // TODO: 数据格式化，流是不能直接转成字符串的, 如何获取到 response 中的字符串返回
-        if (response.isMock) {
-          response.json().then((res: any) => {
-            const result = {
-              status: response.status,
-              url: request.url,
-              headers: [],
-              responseTxt: res,
-              isMock: true,
-              rulePath: response.rulePath,
-              statusText: ""
-            }
-            payload.response = result
-            sendMsg(payload, true)
-            logFetch(request, response)
-            // notification.open({
-            //   message: "Mock Success",
-            //   placement: "bottomRight",
-            //   duration: 1.5,
-            //   description: response.rulePath
-            // })
-          })
-        } else {
-          const cloneRes = response.clone()
-          cloneRes.json().then((res: any) => {
-            const result = {
-              status: response.status,
-              url: request.url,
-              headers: [],
-              responseTxt: res,
-              isMock: false,
-              rulePath: "",
-              statusText: ""
-            }
-            payload.response = result
-            sendMsg(payload)
-          })
-        }
-      },
-      onRequestFailure(response, request) {
-        const payload = {
-          request: {
-            type: "fetch",
-            method: request.method,
-            url: request.url,
-            headers: request.headers
-          },
-          response: {
-            status: response.status,
-            statusText: response.statusText,
-            url: response.url,
-            headers: response.headers,
-            responseTxt: "",
-            isMock: false,
-            rulePath: ""
-          }
-        }
-
-        sendMsg(payload)
+        return response
+      } catch (err) {
+        // console.error(err);
       }
     },
-    currentProject.isRealRequest
-  )
+    onRequestSuccess(response, request) {
+      const payload = {
+        request: {
+          type: "fetch",
+          method: request.method,
+          url: request.url,
+          headers: request.headers
+        },
+        response: {
+          status: response.status,
+          statusText: response.statusText,
+          url: response.url,
+          headers: response.headers,
+          responseTxt: "",
+          isMock: false,
+          rulePath: ""
+        }
+      }
+
+      // TODO: 数据格式化，流是不能直接转成字符串的, 如何获取到 response 中的字符串返回
+      if (response.isMock) {
+        response.json().then((res: any) => {
+          const result = {
+            status: response.status,
+            url: request.url,
+            headers: [],
+            responseTxt: res,
+            isMock: true,
+            rulePath: response.rulePath,
+            statusText: ""
+          }
+          payload.response = result
+          sendMsg(payload, true)
+          logFetch(request, response)
+          // notification.open({
+          //   message: "Mock Success",
+          //   placement: "bottomRight",
+          //   duration: 1.5,
+          //   description: response.rulePath
+          // })
+        })
+      } else {
+        const cloneRes = response.clone()
+        cloneRes.json().then((res: any) => {
+          const result = {
+            status: response.status,
+            url: request.url,
+            headers: [],
+            responseTxt: res,
+            isMock: false,
+            rulePath: "",
+            statusText: ""
+          }
+          payload.response = result
+          sendMsg(payload)
+        })
+      }
+    },
+    onRequestFailure(response, request) {
+      const payload = {
+        request: {
+          type: "fetch",
+          method: request.method,
+          url: request.url,
+          headers: request.headers
+        },
+        response: {
+          status: response.status,
+          statusText: response.statusText,
+          url: response.url,
+          headers: response.headers,
+          responseTxt: "",
+          isMock: false,
+          rulePath: ""
+        }
+      }
+
+      sendMsg(payload)
+    }
+  })
 }

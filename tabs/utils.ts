@@ -1,10 +1,10 @@
 import type { XhrRequestConfig } from "ajax-hook"
 import Url from "url-parse"
-import insertUrl from "url:./contents/insert.ts"
+import insertUrl from "url:../contents/insert.ts"
 
 import { Storage } from "@plasmohq/storage"
 
-import { INJECT_ELEMENT_ID, SCRIPT_JS } from "./const"
+import { INJECT_ELEMENT_ID } from "~const"
 
 export type Methods =
   | "GET"
@@ -104,13 +104,21 @@ export function logFetch(request: any, response: any) {
   })
 }
 const executeScript = (data: any) => {
+  console.log(
+    "%c [ data ]-107",
+    "font-size:13px; background:pink; color:#bf2c9f;",
+    data
+  )
   const code = JSON.stringify(data)
-
+  console.log(
+    "%c [ code ]-108",
+    "font-size:13px; background:pink; color:#bf2c9f;",
+    code
+  )
   const inputElem = document.getElementById(INJECT_ELEMENT_ID)
-
-  if (inputElem !== null) {
-    ;(inputElem as HTMLInputElement).value = code
-  }
+  const inputData = inputElem as HTMLInputElement
+  console.log(inputData.value, 21212112122)
+  ;(inputElem as HTMLInputElement).value = code
 }
 const storage = new Storage({
   area: "local",
@@ -118,6 +126,7 @@ const storage = new Storage({
 })
 
 export const setGlobalData = async () => {
+  console.log("setGlobalData")
   const list = await storage.get("mock_genius_projects") // "value"
 
   const cur = await storage.get("mockgenius_current_project") // "value"
@@ -126,27 +135,27 @@ export const setGlobalData = async () => {
     mock_genius_projects: list,
     mockgenius_current_project: cur
   }
+
+  console.log(
+    "%c [ result ]-131",
+    "font-size:13px; background:pink; color:#bf2c9f;",
+    result
+  )
   executeScript(result)
 }
 export const injectScriptToPage = () => {
   console.log("injectScriptToPage")
   try {
-    const oldInsertScript = document.querySelector(SCRIPT_JS)
-    const oldInput = document.getElementById(INJECT_ELEMENT_ID)
-    if (oldInsertScript) {
-      oldInsertScript.parentNode?.removeChild(oldInsertScript)
-    }
-
-    if (oldInput) {
-      oldInput.parentNode?.removeChild(oldInput)
-    }
+    removeInjectScript()
+    // const oldInput = document.getElementById(INJECT_ELEMENT_ID)
+    // if (oldInput) {
+    //   oldInput.parentNode?.removeChild(oldInput)
+    // }
     let insertScript = document.createElement("script")
     insertScript.setAttribute("type", "module")
     insertScript.src = insertUrl
-
     document.documentElement.appendChild(insertScript)
     const input = document.createElement("input")
-
     input.setAttribute("id", INJECT_ELEMENT_ID)
     input.setAttribute("style", "display:none")
     document.documentElement.appendChild(input)
@@ -155,12 +164,39 @@ export const injectScriptToPage = () => {
   }
 }
 export function removeInjectScript() {
-  const script = document.querySelector(SCRIPT_JS)
-  if (script) {
-    script.remove()
-  }
-  const input = document.getElementById(INJECT_ELEMENT_ID)
-  if (input) {
-    input.remove()
+  console.log("removeInjectScript")
+  // 创建正则表达式，匹配动态部分
+  var regex =
+    /^chrome-extension:\/\/lgabnfcflgnaldfgnaedddgoenldnhdf\/insert\.[a-f0-9]+\.js\?[0-9]+$/
+
+  // 查找所有 script 元素
+  var scriptElements = document.querySelectorAll("script")
+  console.log(
+    "%c [ scriptElements ]-160",
+    "font-size:13px; background:pink; color:#bf2c9f;",
+    scriptElements
+  )
+
+  // 遍历所有 script 元素
+  scriptElements.forEach(function (scriptElement) {
+    console.log(
+      "%c [ scriptElement ]-164",
+      "font-size:13px; background:pink; color:#bf2c9f;",
+      scriptElement
+    )
+    // 检查元素的 src 属性是否匹配正则表达式
+    if (regex.test(scriptElement.src)) {
+      // 如果匹配，则删除该元素
+      scriptElement.parentNode.removeChild(scriptElement)
+    }
+  })
+  const oldInput = document.getElementById(INJECT_ELEMENT_ID)
+  console.log(
+    "%c [ oldInput ]-180",
+    "font-size:13px; background:pink; color:#bf2c9f;",
+    oldInput
+  )
+  if (oldInput) {
+    oldInput.parentNode?.removeChild(oldInput)
   }
 }
