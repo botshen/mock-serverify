@@ -1,10 +1,10 @@
 import type { XhrRequestConfig } from "ajax-hook"
 import Url from "url-parse"
-import insertUrl from "url:../contents/insert.ts"
+import insertUrl from "url:./insert.ts"
 
 import { Storage } from "@plasmohq/storage"
 
-import { INJECT_ELEMENT_ID } from "~const"
+import { INJECT_ELEMENT_ID } from "./const"
 
 export type Methods =
   | "GET"

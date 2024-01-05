@@ -1,12 +1,11 @@
 import { Storage } from "@plasmohq/storage"
 
-import { injectScriptToPage, setGlobalData } from "~tabs/utils"
-
 import {
   AJAX_INTERCEPTOR_CURRENT_PROJECT,
   AJAX_INTERCEPTOR_PROJECTS,
   CUSTOM_EVENT_NAME
-} from "../const"
+} from "../util/const"
+import { injectScriptToPage, setGlobalData } from "../util/utils"
 
 // window.addEventListener("load", () => {
 //   console.log(
@@ -53,6 +52,8 @@ window.addEventListener(
 )
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+  console.log("request", request)
+
   if (request.type === "updateRules") {
     const { origin } = location
     const currentUrl = request.payload.baseUrl

@@ -2,11 +2,10 @@ import { proxy } from "ajax-hook"
 import { parse, stringify } from "flatted"
 import Url from "url-parse"
 
-import { logFetch, logTerminalMockMessage } from "~tabs/utils"
-
-import { CUSTOM_EVENT_NAME, INJECT_ELEMENT_ID } from "../const"
+import { CUSTOM_EVENT_NAME, INJECT_ELEMENT_ID } from "./const"
 // import { notification } from 'antd';
 import FetchInterceptor from "./fetch"
+import { logFetch, logTerminalMockMessage } from "./utils"
 
 function getCurrentProject() {
   const inputElem = document.getElementById(
