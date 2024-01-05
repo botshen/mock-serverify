@@ -1,16 +1,10 @@
 import { proxy } from "ajax-hook"
 import { parse, stringify } from "flatted"
-import type { PlasmoCSConfig } from "plasmo"
 import Url from "url-parse"
 
 import { logFetch, logTerminalMockMessage } from "~tabs/utils"
 
-import {
-  AJAX_INTERCEPTOR_CURRENT_PROJECT,
-  AJAX_INTERCEPTOR_PROJECTS,
-  CUSTOM_EVENT_NAME,
-  INJECT_ELEMENT_ID
-} from "../const"
+import { CUSTOM_EVENT_NAME, INJECT_ELEMENT_ID } from "../const"
 // import { notification } from 'antd';
 import FetchInterceptor from "./fetch"
 
@@ -42,7 +36,6 @@ function getCurrentProject() {
     return {}
   }
 }
-// const currentProject = getCurrentProject()
 
 console.log("inject.ts")
 async function mockCore(url: string, method: string) {
