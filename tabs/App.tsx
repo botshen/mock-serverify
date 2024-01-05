@@ -11,12 +11,19 @@ import { useStorage } from "@plasmohq/storage/hook"
 import { isMockText } from "~util/utils"
 
 import { globalRouters } from "./router"
-import { defaultCurrent, storageCurrentConfig } from "./store"
+import {
+  defaultCurrent,
+  defaultSettings,
+  storageCurrentConfig,
+  storageSettings
+} from "./store"
 import { useLogStore } from "./store/useLogStore"
 import theme from "./theme"
 
 export default function DeltaFlyerPage() {
   const [currentProject] = useStorage(storageCurrentConfig, defaultCurrent)
+  useStorage(storageSettings, defaultSettings)
+
   const { addApiLogList } = useLogStore() as any
 
   useEffect(() => {
