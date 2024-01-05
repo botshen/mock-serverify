@@ -25,6 +25,23 @@ import { updateRule } from "~util/utils"
 import ResponseEditors from "./ResponseEditor"
 
 const RuleEditor = () => {
+  const httpStatusCodes = [
+    100, 101, 102, 103, 200, 201, 202, 203, 204, 205, 206, 207, 208, 226, 300,
+    301, 302, 303, 304, 305, 306, 307, 308, 400, 401, 402, 403, 404, 405, 406,
+    407, 408, 409, 410, 411, 412, 413, 414, 415, 416, 417, 418, 421, 422, 423,
+    424, 425, 426, 428, 429, 431, 451, 500, 501, 502, 503, 504, 505, 506, 507,
+    508, 510, 511
+  ]
+  const httpMethods = [
+    "GET",
+    "POST",
+    "PUT",
+    "PATCH",
+    "DELETE",
+    "OPTIONS",
+    "HEAD"
+  ]
+
   const { baseUrl, pathRule, mode, row } = useLocation().state
   const navigation = useNavigate()
   const [projects, setProjects] = useStorage<ProjectType[]>(
@@ -285,8 +302,11 @@ const RuleEditor = () => {
                           isInvalid={form.errors.Method && form.touched.Method}>
                           <FormLabel>Method</FormLabel>
                           <Select {...field} placeholder="Select option">
-                            <option value="GET">get</option>
-                            <option value="POST">post</option>
+                            {httpMethods.map((item) => (
+                              <option value={item} key={item}>
+                                {item}
+                              </option>
+                            ))}
                           </Select>
                           <FormErrorMessage>
                             {form.errors.Method}
@@ -319,9 +339,11 @@ const RuleEditor = () => {
                           isInvalid={form.errors.code && form.touched.code}>
                           <FormLabel>code</FormLabel>
                           <Select {...field} placeholder="Select option">
-                            <option value="200">200</option>
-                            <option value="404">404</option>
-                            <option value="500">500</option>
+                            {httpStatusCodes.map((item) => (
+                              <option value={item} key={item}>
+                                {item}
+                              </option>
+                            ))}
                           </Select>
                           <FormErrorMessage>
                             {form.errors.code}

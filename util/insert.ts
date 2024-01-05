@@ -216,103 +216,103 @@ proxy({
   }
 })
 
-if (window.fetch !== undefined) {
-  FetchInterceptor.register({
-    async onBeforeRequest(request: { url: string; method: string }) {
-      const res = await mockCore(request.url, request.method)
-      try {
-        const { path: rulePath } = res
-        const response: any = new Response()
-        response.isMock = true
-        response.rulePath = rulePath
-        if (typeof res.response === "string") {
-          response.text = res.response
-        } else if (typeof res.response === "object") {
-          response.json = () => Promise.resolve(res.response)
-        }
-        return response
-      } catch (err) {
-        console.error(err)
-      }
-    },
-    onRequestSuccess(response, request) {
-      const payload = {
-        request: {
-          type: "fetch",
-          method: request.method,
-          url: request.url,
-          headers: request.headers
-        },
-        response: {
-          status: response.status,
-          statusText: response.statusText,
-          url: response.url,
-          headers: response.headers,
-          responseTxt: "",
-          isMock: false,
-          rulePath: ""
-        }
-      }
+// if (window.fetch !== undefined) {
+//   FetchInterceptor.register({
+//     async onBeforeRequest(request: { url: string; method: string }) {
+//       const res = await mockCore(request.url, request.method)
+//       try {
+//         const { path: rulePath } = res
+//         const response: any = new Response()
+//         response.isMock = true
+//         response.rulePath = rulePath
+//         if (typeof res.response === "string") {
+//           response.text = res.response
+//         } else if (typeof res.response === "object") {
+//           response.json = () => Promise.resolve(res.response)
+//         }
+//         return response
+//       } catch (err) {
+//         console.error(err)
+//       }
+//     },
+//     onRequestSuccess(response, request) {
+//       const payload = {
+//         request: {
+//           type: "fetch",
+//           method: request.method,
+//           url: request.url,
+//           headers: request.headers
+//         },
+//         response: {
+//           status: response.status,
+//           statusText: response.statusText,
+//           url: response.url,
+//           headers: response.headers,
+//           responseTxt: "",
+//           isMock: false,
+//           rulePath: ""
+//         }
+//       }
 
-      // TODO: 数据格式化，流是不能直接转成字符串的, 如何获取到 response 中的字符串返回
-      if (response.isMock) {
-        response.json().then((res: any) => {
-          const result = {
-            status: response.status,
-            url: request.url,
-            headers: [],
-            responseTxt: res,
-            isMock: true,
-            rulePath: response.rulePath,
-            statusText: ""
-          }
-          payload.response = result
-          sendMsg(payload, true)
-          logFetch(request, response)
-          // notification.open({
-          //   message: "Mock Success",
-          //   placement: "bottomRight",
-          //   duration: 1.5,
-          //   description: response.rulePath
-          // })
-        })
-      } else {
-        const cloneRes = response.clone()
-        cloneRes.json().then((res: any) => {
-          const result = {
-            status: response.status,
-            url: request.url,
-            headers: [],
-            responseTxt: res,
-            isMock: false,
-            rulePath: "",
-            statusText: ""
-          }
-          payload.response = result
-          sendMsg(payload)
-        })
-      }
-    },
-    onRequestFailure(response, request) {
-      const payload = {
-        request: {
-          type: "fetch",
-          method: request.method,
-          url: request.url,
-          headers: request.headers
-        },
-        response: {
-          status: response.status,
-          statusText: response.statusText,
-          url: response.url,
-          headers: response.headers,
-          responseTxt: "",
-          isMock: false,
-          rulePath: ""
-        }
-      }
+//       // TODO: 数据格式化，流是不能直接转成字符串的, 如何获取到 response 中的字符串返回
+//       if (response.isMock) {
+//         response.json().then((res: any) => {
+//           const result = {
+//             status: response.status,
+//             url: request.url,
+//             headers: [],
+//             responseTxt: res,
+//             isMock: true,
+//             rulePath: response.rulePath,
+//             statusText: ""
+//           }
+//           payload.response = result
+//           sendMsg(payload, true)
+//           logFetch(request, response)
+//           // notification.open({
+//           //   message: "Mock Success",
+//           //   placement: "bottomRight",
+//           //   duration: 1.5,
+//           //   description: response.rulePath
+//           // })
+//         })
+//       } else {
+//         const cloneRes = response.clone()
+//         cloneRes.json().then((res: any) => {
+//           const result = {
+//             status: response.status,
+//             url: request.url,
+//             headers: [],
+//             responseTxt: res,
+//             isMock: false,
+//             rulePath: "",
+//             statusText: ""
+//           }
+//           payload.response = result
+//           sendMsg(payload)
+//         })
+//       }
+//     },
+//     onRequestFailure(response, request) {
+//       const payload = {
+//         request: {
+//           type: "fetch",
+//           method: request.method,
+//           url: request.url,
+//           headers: request.headers
+//         },
+//         response: {
+//           status: response.status,
+//           statusText: response.statusText,
+//           url: response.url,
+//           headers: response.headers,
+//           responseTxt: "",
+//           isMock: false,
+//           rulePath: ""
+//         }
+//       }
 
-      sendMsg(payload)
-    }
-  })
-}
+//       sendMsg(payload)
+//     }
+//   })
+// }

@@ -56,6 +56,7 @@ export default function DeltaFlyerPage() {
                 hour12: false
               })
             }
+            console.log("result", result)
             addApiLogList(result)
           }
         })

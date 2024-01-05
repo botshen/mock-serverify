@@ -19,8 +19,8 @@ const storage = new Storage({
   area: "local",
   copiedKeyList: [AJAX_INTERCEPTOR_CURRENT_PROJECT, AJAX_INTERCEPTOR_PROJECTS]
 })
-
 ;(async () => {
+  const { origin } = location
   const currentNameUrl = await storage.get(AJAX_INTERCEPTOR_CURRENT_PROJECT)
   if (origin === currentNameUrl) {
     injectScriptToPage()
