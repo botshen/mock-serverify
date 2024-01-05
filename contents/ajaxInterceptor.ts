@@ -64,13 +64,13 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 })
 
 storage.watch({
-  mock_genius_projects: (c) => {
+  [AJAX_INTERCEPTOR_PROJECTS]: (c) => {
     if (c.newValue === undefined) {
       // 设置初始值
       storage.set(AJAX_INTERCEPTOR_PROJECTS, [])
     }
   },
-  mockgenius_current_project: (c) => {
+  [AJAX_INTERCEPTOR_CURRENT_PROJECT]: (c) => {
     if (c.newValue === undefined) {
       // 设置初始值
       storage.set(AJAX_INTERCEPTOR_CURRENT_PROJECT, "")

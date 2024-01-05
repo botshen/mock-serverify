@@ -4,7 +4,11 @@ import insertUrl from "url:./insert.ts"
 
 import { Storage } from "@plasmohq/storage"
 
-import { INJECT_ELEMENT_ID } from "./const"
+import {
+  AJAX_INTERCEPTOR_CURRENT_PROJECT,
+  AJAX_INTERCEPTOR_PROJECTS,
+  INJECT_ELEMENT_ID
+} from "./const"
 
 export type Methods =
   | "GET"
@@ -111,16 +115,16 @@ const executeScript = (data: any) => {
 }
 const storage = new Storage({
   area: "local",
-  copiedKeyList: ["mock_genius_projects", "mockgenius_current_project"]
+  copiedKeyList: [AJAX_INTERCEPTOR_PROJECTS, AJAX_INTERCEPTOR_CURRENT_PROJECT]
 })
 
 export const setGlobalData = async () => {
   console.log("setGlobalData")
-  const list = await storage.get("mock_genius_projects")
-  const cur = await storage.get("mockgenius_current_project")
+  const list = await storage.get(AJAX_INTERCEPTOR_PROJECTS)
+  const cur = await storage.get(AJAX_INTERCEPTOR_CURRENT_PROJECT)
   const result = {
-    mock_genius_projects: list,
-    mockgenius_current_project: cur
+    [AJAX_INTERCEPTOR_PROJECTS]: list,
+    [AJAX_INTERCEPTOR_CURRENT_PROJECT]: cur
   }
   executeScript(result)
 }

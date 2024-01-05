@@ -2,7 +2,12 @@ import { proxy } from "ajax-hook"
 import { parse, stringify } from "flatted"
 import Url from "url-parse"
 
-import { CUSTOM_EVENT_NAME, INJECT_ELEMENT_ID } from "./const"
+import {
+  AJAX_INTERCEPTOR_CURRENT_PROJECT,
+  AJAX_INTERCEPTOR_PROJECTS,
+  CUSTOM_EVENT_NAME,
+  INJECT_ELEMENT_ID
+} from "./const"
 // import { notification } from 'antd';
 import FetchInterceptor from "./fetch"
 import { logFetch, logTerminalMockMessage } from "./utils"
@@ -18,11 +23,13 @@ function getCurrentProject() {
 
   try {
     const config = JSON.parse(configStr)
-    const { mockgenius_current_project, mock_genius_projects } = config
+    const {
+      [AJAX_INTERCEPTOR_CURRENT_PROJECT]: currentProject,
+      [AJAX_INTERCEPTOR_PROJECTS]: projects
+    } = config
     const curProject =
-      mock_genius_projects?.find(
-        (item: { baseUrl: string }) =>
-          item.baseUrl === mockgenius_current_project
+      projects?.find(
+        (item: { baseUrl: string }) => item.baseUrl === currentProject
       ) || {}
 
     return curProject

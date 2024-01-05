@@ -1,17 +1,22 @@
 import { Storage } from "@plasmohq/storage"
 
+import {
+  AJAX_INTERCEPTOR_CURRENT_PROJECT,
+  AJAX_INTERCEPTOR_PROJECTS
+} from "~util/const"
+
 export const storageConfig = {
-  key: "mock_genius_projects",
+  key: AJAX_INTERCEPTOR_PROJECTS,
   instance: new Storage({
     area: "local",
-    copiedKeyList: ["mock_genius_projects"]
+    copiedKeyList: [AJAX_INTERCEPTOR_PROJECTS]
   })
 }
 export const storageCurrentConfig = {
-  key: "mockgenius_current_project",
+  key: AJAX_INTERCEPTOR_CURRENT_PROJECT,
   instance: new Storage({
     area: "local",
-    copiedKeyList: ["mockgenius_current_project"]
+    copiedKeyList: [AJAX_INTERCEPTOR_CURRENT_PROJECT]
   })
 }
 
