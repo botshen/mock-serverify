@@ -9,12 +9,8 @@ import Url from "url-parse"
 import { useStorage } from "@plasmohq/storage/hook"
 
 import { globalRouters } from "./router"
-import {
-  defaultCurrent,
-  defaultLogsFunction,
-  storageCurrentConfig,
-  storageLogsConfig
-} from "./store"
+import { defaultCurrent, storageCurrentConfig } from "./store"
+import { useLogStore } from "./store/useLogStore"
 import theme from "./theme"
 
 const isMockText = (isMock: boolean) => {
@@ -26,7 +22,7 @@ const isMockText = (isMock: boolean) => {
 }
 export default function DeltaFlyerPage() {
   const [currentProject] = useStorage(storageCurrentConfig, defaultCurrent)
-  const [logs, setLogs] = useStorage(storageLogsConfig, defaultLogsFunction)
+  const { addApiLogList } = useLogStore() as any
 
   useEffect(() => {
     ;(async () => {
@@ -37,11 +33,6 @@ export default function DeltaFlyerPage() {
           }
           if (event.type === "ajaxInterceptor") {
             const data = event.data
-            console.log(
-              "%c [ data ]-40",
-              "font-size:13px; background:pink; color:#bf2c9f;",
-              data
-            )
             const targetUrl = new Url(data.request.url)
             const result = {
               url: targetUrl.pathname,
@@ -58,17 +49,12 @@ export default function DeltaFlyerPage() {
                 hour12: false
               })
             }
-            setLogs(() => {
-              if (logs.length > 5) {
-                logs.pop()
-              }
-              return [result, ...logs]
-            })
+            addApiLogList(result)
           }
         })
       } catch (error) {}
     })()
-  }, [logs.length])
+  }, [])
   return (
     <ChakraProvider theme={theme}>
       <ColorModeScript initialColorMode={theme.config.initialColorMode} />

@@ -14,14 +14,6 @@ export const storageCurrentConfig = {
     copiedKeyList: ["mockgenius_current_project"]
   })
 }
-export const storageLogsConfig = {
-  key: "mockgenius_logs",
-  instance: new Storage({
-    area: "local",
-    copiedKeyList: ["mockgenius_logs"]
-  })
-}
-export const defaultValueFunction = (v) => v ?? []
-export const defaultLogsFunction = (v) => v ?? []
 
+export const defaultValueFunction = (v) => v ?? []
 export const defaultCurrent = (v) => v ?? "http://localhost:5173"

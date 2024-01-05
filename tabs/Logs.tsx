@@ -12,21 +12,16 @@ import {
   Thead,
   Tr
 } from "@chakra-ui/react"
-import { useState } from "react"
-import { useLocation, useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 
 import { useStorage } from "@plasmohq/storage/hook"
 
-import {
-  defaultCurrent,
-  defaultLogsFunction,
-  storageCurrentConfig,
-  storageLogsConfig
-} from "./store"
+import { defaultCurrent, storageCurrentConfig } from "./store"
+import { useLogStore } from "./store/useLogStore"
 
 export default function Logs() {
-  const [logs, setLogs] = useStorage(storageLogsConfig, defaultLogsFunction)
   const [currentProject] = useStorage(storageCurrentConfig, defaultCurrent)
+  const { apiLogList, clearLogList } = useLogStore()
 
   const navigation = useNavigate()
 
@@ -39,12 +34,10 @@ export default function Logs() {
       }
     })
   }
-  const clearLogs = () => {
-    setLogs([])
-  }
+
   return (
     <>
-      <Button onClick={clearLogs}>clear log</Button>
+      <Button onClick={clearLogList}>clear log</Button>
       <TableContainer>
         <Table variant="simple">
           <Thead>
@@ -58,8 +51,8 @@ export default function Logs() {
             </Tr>
           </Thead>
           <Tbody>
-            {logs.length > 0 &&
-              logs.map((item, index) => (
+            {apiLogList.length > 0 &&
+              apiLogList.map((item, index) => (
                 <Tr key={index} onClick={() => handleRowClick(item)}>
                   <Td fontSize="medium">{item.url}</Td>
                   <Td fontSize="medium">{item.method}</Td>
