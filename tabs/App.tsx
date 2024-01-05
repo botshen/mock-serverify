@@ -37,6 +37,11 @@ export default function DeltaFlyerPage() {
           }
           if (event.type === "ajaxInterceptor") {
             const data = event.data
+            console.log(
+              "%c [ data ]-40",
+              "font-size:13px; background:pink; color:#bf2c9f;",
+              data
+            )
             const targetUrl = new Url(data.request.url)
             const result = {
               url: targetUrl.pathname,
@@ -63,7 +68,7 @@ export default function DeltaFlyerPage() {
         })
       } catch (error) {}
     })()
-  }, [logs])
+  }, [logs.length])
   return (
     <ChakraProvider theme={theme}>
       <ColorModeScript initialColorMode={theme.config.initialColorMode} />

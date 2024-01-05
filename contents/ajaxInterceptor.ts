@@ -39,7 +39,6 @@ window.addEventListener(
         if (customEvent.detail && origin === currentNameUrl) {
           await chrome.runtime.sendMessage({
             type: "ajaxInterceptor",
-            message: "content_to_background",
             data: customEvent.detail
           })
         }

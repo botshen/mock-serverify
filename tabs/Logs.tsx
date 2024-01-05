@@ -25,13 +25,6 @@ import {
 } from "./store"
 
 export default function Logs() {
-  const location = useLocation()
-  console.log(
-    "%c [ location ]-23",
-    "font-size:13px; background:pink; color:#bf2c9f;",
-    location
-  )
-
   const [logs, setLogs] = useStorage(storageLogsConfig, defaultLogsFunction)
   const [currentProject] = useStorage(storageCurrentConfig, defaultCurrent)
 
@@ -56,7 +49,6 @@ export default function Logs() {
         <Table variant="simple">
           <Thead>
             <Tr>
-              {/* <Th fontSize="medium">Comment</Th> */}
               <Th fontSize="medium">Url</Th>
               <Th fontSize="medium">Method</Th>
               <Th fontSize="medium">Code</Th>
@@ -69,7 +61,6 @@ export default function Logs() {
             {logs.length > 0 &&
               logs.map((item, index) => (
                 <Tr key={index} onClick={() => handleRowClick(item)}>
-                  {/* <Td fontSize="medium">{item.comment}</Td> */}
                   <Td fontSize="medium">{item.url}</Td>
                   <Td fontSize="medium">{item.method}</Td>
                   <Td fontSize="medium">{item.status}</Td>
