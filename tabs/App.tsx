@@ -22,6 +22,11 @@ import theme from "./theme"
 
 export default function DeltaFlyerPage() {
   const [currentProject] = useStorage(storageCurrentConfig, defaultCurrent)
+  console.log(
+    "%c [ currentProject ]-25",
+    "font-size:13px; background:pink; color:#bf2c9f;",
+    currentProject
+  )
   useStorage(storageSettings, defaultSettings)
 
   const { addApiLogList } = useLogStore() as any
@@ -56,7 +61,7 @@ export default function DeltaFlyerPage() {
         })
       } catch (error) {}
     })()
-  }, [])
+  }, [currentProject])
   return (
     <ChakraProvider theme={theme}>
       <ColorModeScript initialColorMode={theme.config.initialColorMode} />

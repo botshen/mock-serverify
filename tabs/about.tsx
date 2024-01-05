@@ -5,17 +5,15 @@ import logo from "../assets/icon.png"
 
 const About = () => {
   return (
-    <Center>
-      <div>
-        <Image src={logo} boxSize="350px" padding="10px" />
-        <Text textAlign="center" fontSize="x-large" fontWeight="bold">
-          Mock Serverity
-        </Text>
-        <Text textAlign="center" fontSize="x-large" fontWeight="bold">
-          Version: 0.0.1
-        </Text>
-      </div>
-    </Center>
+    <div>
+      <Image src={logo} boxSize="100px" padding="10px" />
+      <Text fontSize="medium" fontWeight="bold">
+        Mock Serverity
+      </Text>
+      <Text fontSize="medium" fontWeight="bold">
+        Version: 0.0.1
+      </Text>
+    </div>
   )
 }
 

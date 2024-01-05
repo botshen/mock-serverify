@@ -1,3 +1,5 @@
+import { m } from "framer-motion"
+
 import { Storage } from "@plasmohq/storage"
 
 import {
@@ -36,6 +38,7 @@ window.addEventListener(
           AJAX_INTERCEPTOR_CURRENT_PROJECT
         )
         const { origin } = location
+
         if (customEvent.detail && origin === currentNameUrl) {
           await chrome.runtime.sendMessage({
             type: "ajaxInterceptor",
@@ -43,7 +46,7 @@ window.addEventListener(
           })
         }
       } catch (error) {
-        // console.error("error", error)
+        console.error("error", error)
       }
     }
   },
@@ -51,8 +54,6 @@ window.addEventListener(
 )
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-  console.log("request", request)
-
   if (request.type === "updateRules") {
     const { origin } = location
     const currentUrl = request.payload.baseUrl
