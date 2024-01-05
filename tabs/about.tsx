@@ -8,10 +8,10 @@ const About = () => {
     <Center>
       <div>
         <Image src={logo} boxSize="350px" padding="10px" />
-        <Text textAlign="center" fontSize="xxx-large" fontWeight="bold">
+        <Text textAlign="center" fontSize="x-large" fontWeight="bold">
           Mock Serverity
         </Text>
-        <Text textAlign="center" fontSize="xxx-large" fontWeight="bold">
+        <Text textAlign="center" fontSize="x-large" fontWeight="bold">
           Version: 0.0.1
         </Text>
       </div>

@@ -1,13 +1,9 @@
-import { AddIcon, PhoneIcon, WarningIcon } from "@chakra-ui/icons"
 import {
   Button,
-  Switch,
   Table,
-  TableCaption,
   TableContainer,
   Tbody,
   Td,
-  Tfoot,
   Th,
   Thead,
   Tr
@@ -51,7 +47,8 @@ export default function Logs() {
             </Tr>
           </Thead>
           <Tbody>
-            {apiLogList.length > 0 &&
+            {apiLogList &&
+              apiLogList.length > 0 &&
               apiLogList.map((item, index) => (
                 <Tr key={index} onClick={() => handleRowClick(item)}>
                   <Td fontSize="medium">{item.url}</Td>

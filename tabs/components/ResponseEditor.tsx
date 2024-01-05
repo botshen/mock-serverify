@@ -18,7 +18,6 @@ export default function ResponseEditors(props: Props) {
   const refContainer = useRef<HTMLDivElement | null>(null)
   const refEditor = useRef<JSONEditor | null>(null)
   const { colorMode } = useColorMode()
-  // 根据colorMode动态设置class
   useEffect(() => {
     if (refContainer.current) {
       refContainer.current.className = `jse-theme-${colorMode}`

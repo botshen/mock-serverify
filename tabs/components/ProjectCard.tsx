@@ -1,7 +1,6 @@
 import {
   AlertDialog,
   AlertDialogBody,
-  AlertDialogCloseButton,
   AlertDialogContent,
   AlertDialogFooter,
   AlertDialogHeader,
@@ -11,7 +10,6 @@ import {
   CardBody,
   FormControl,
   FormErrorMessage,
-  FormHelperText,
   FormLabel,
   Heading,
   HStack,
@@ -20,7 +18,6 @@ import {
   ModalBody,
   ModalCloseButton,
   ModalContent,
-  ModalFooter,
   ModalHeader,
   ModalOverlay,
   Spacer,
@@ -36,12 +33,11 @@ import { useStorage } from "@plasmohq/storage/hook"
 
 import {
   defaultCurrent,
-  defaultLogsFunction,
   defaultValueFunction,
   storageConfig,
-  storageCurrentConfig,
-  storageLogsConfig
+  storageCurrentConfig
 } from "~tabs/store"
+import { useLogStore } from "~tabs/store/useLogStore"
 
 interface Props {
   name: string
@@ -51,7 +47,7 @@ interface Props {
 const ProjectCard = ({ name, description, baseUrl }: Props) => {
   const navigation = useNavigate()
   const cancelRef = React.useRef()
-  const [logs, setLogs] = useStorage(storageLogsConfig, defaultLogsFunction)
+  const { clearLogList } = useLogStore()
 
   const [projects, setProjects] = useStorage<ProjectType[]>(
     storageConfig,
@@ -65,7 +61,6 @@ const ProjectCard = ({ name, description, baseUrl }: Props) => {
   const modals = {
     modal1: useDisclosure(),
     modal2: useDisclosure()
-    // 可以根据需要添加更多的模态框
   }
   const { isOpen, onOpen, onClose } = useDisclosure()
   const validateName = (value) => {
@@ -79,7 +74,7 @@ const ProjectCard = ({ name, description, baseUrl }: Props) => {
     setCurProjects(baseUrl)
     if (curProjects !== baseUrl) {
       // reset logs if switch to another project
-      setLogs([])
+      clearLogList()
     }
     navigation("../savedRules", {
       state: projects?.find((project) => project.baseUrl === baseUrl)

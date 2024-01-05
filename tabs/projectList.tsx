@@ -1,7 +1,5 @@
 import { SimpleGrid } from "@chakra-ui/react"
-import { useLocation } from "react-router-dom"
 
-import { Storage } from "@plasmohq/storage"
 import { useStorage } from "@plasmohq/storage/hook"
 
 import ProjectCard from "./components/ProjectCard"
@@ -21,7 +19,8 @@ export default function ProjectList() {
         templateColumns="repeat(auto-fill, minmax(250px, 1fr))"
         spacing={10}
         padding="20px">
-        {projectList.length > 0 &&
+        {projectList &&
+          projectList.length > 0 &&
           projectList.map((project) => (
             <ProjectCard
               key={project?.baseUrl}

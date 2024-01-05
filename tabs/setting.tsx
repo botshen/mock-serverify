@@ -1,11 +1,4 @@
-import {
-  Checkbox,
-  FormControl,
-  FormErrorMessage,
-  FormHelperText,
-  FormLabel,
-  HStack
-} from "@chakra-ui/react"
+import { Checkbox, FormControl, FormHelperText } from "@chakra-ui/react"
 import React from "react"
 
 const Setting = () => {

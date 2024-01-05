@@ -12,16 +12,15 @@ import {
   ModalHeader,
   ModalOverlay,
   Spacer,
-  Text,
   useDisclosure,
   useToast
 } from "@chakra-ui/react"
 import { Field, Form, Formik } from "formik"
-import { useNavigate } from "react-router-dom"
 
 import { useStorage } from "@plasmohq/storage/hook"
 
 import { defaultValueFunction, storageConfig } from "~tabs/store"
+import { updateRule } from "~util/utils"
 
 const ProjectNavBar = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -79,9 +78,9 @@ const ProjectNavBar = () => {
             <Formik
               initialValues={{ name: "", baseUrl: "http://", description: "" }}
               onSubmit={(values, actions) => {
-                setProjects(
-                  projects.concat({ ...values, rules: [], switchOn: true })
-                )
+                const formData = { ...values, rules: [], switchOn: true }
+                setProjects(projects.concat(formData))
+                updateRule(values.baseUrl, formData)
                 actions.setSubmitting(false)
                 onClose()
                 toast({

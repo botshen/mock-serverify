@@ -8,18 +8,13 @@ import Url from "url-parse"
 
 import { useStorage } from "@plasmohq/storage/hook"
 
+import { isMockText } from "~util/utils"
+
 import { globalRouters } from "./router"
 import { defaultCurrent, storageCurrentConfig } from "./store"
 import { useLogStore } from "./store/useLogStore"
 import theme from "./theme"
 
-const isMockText = (isMock: boolean) => {
-  if (isMock) {
-    return "Mock"
-  } else {
-    return "穿透"
-  }
-}
 export default function DeltaFlyerPage() {
   const [currentProject] = useStorage(storageCurrentConfig, defaultCurrent)
   const { addApiLogList } = useLogStore() as any

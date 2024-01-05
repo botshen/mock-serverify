@@ -167,3 +167,26 @@ export function removeInjectScript() {
     oldInput.parentNode?.removeChild(oldInput)
   }
 }
+
+export const updateRule = (baseUrl: string, formData) => {
+  chrome.tabs.query({}, function (tabs) {
+    const targetTabId = tabs.find((i) => new Url(i.url).origin === baseUrl)?.id
+    if (targetTabId) {
+      chrome.tabs.sendMessage(targetTabId, {
+        type: "updateRules",
+        payload: {
+          baseUrl,
+          formData
+        }
+      })
+    }
+  })
+}
+
+export const isMockText = (isMock: boolean) => {
+  if (isMock) {
+    return "Mock"
+  } else {
+    return "穿透"
+  }
+}

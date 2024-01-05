@@ -11,17 +11,16 @@ import {
   InputRightAddon,
   Select,
   Spacer,
-  Switch,
   VStack
 } from "@chakra-ui/react"
 import { Field, Form, Formik } from "formik"
 import { useEffect, useMemo, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
-import Url from "url-parse"
 
 import { useStorage } from "@plasmohq/storage/hook"
 
 import { defaultValueFunction, storageConfig } from "~tabs/store"
+import { updateRule } from "~util/utils"
 
 import ResponseEditors from "./ResponseEditor"
 
@@ -151,21 +150,7 @@ const RuleEditor = () => {
     setJsonData(jsonDataMemo)
   }, [jsonDataMemo])
   const [jsonData, setJsonData] = useState(jsonDataMemo)
-  const updateRule = (formData: any) => {
-    chrome.tabs.query({}, function (tabs) {
-      const targetTabId = tabs.find((i) => new Url(i.url).origin === baseUrl)
-        ?.id
-      if (targetTabId) {
-        chrome.tabs.sendMessage(targetTabId, {
-          type: "updateRules",
-          payload: {
-            baseUrl,
-            formData
-          }
-        })
-      }
-    })
-  }
+
   return (
     <>
       <VStack padding="20px" height="500px">
@@ -251,7 +236,7 @@ const RuleEditor = () => {
                 setProjects(_val)
               }
               if (mode === "log") {
-                updateRule(formData)
+                updateRule(baseUrl, formData)
                 navigation("../savedRules", {
                   state: projects?.find(
                     (project) => project.baseUrl === baseUrl
@@ -260,7 +245,7 @@ const RuleEditor = () => {
                 actions.setSubmitting(false)
                 return
               }
-              updateRule(formData)
+              updateRule(baseUrl, formData)
               actions.setSubmitting(false)
               handleCancel()
             }}>

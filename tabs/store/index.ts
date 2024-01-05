@@ -21,4 +21,4 @@ export const storageCurrentConfig = {
 }
 
 export const defaultValueFunction = (v) => v ?? []
-export const defaultCurrent = (v) => v ?? "http://localhost:5173"
+export const defaultCurrent = (v) => v ?? ""
