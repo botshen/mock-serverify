@@ -3,6 +3,8 @@ import { JSONEditor } from "vanilla-jsoneditor"
 
 import "./json.css"
 
+import { useColorMode } from "@chakra-ui/react"
+
 interface Props {
   readOnly?: boolean
   onChange?: (value: any) => void
@@ -15,7 +17,13 @@ interface Props {
 export default function ResponseEditors(props: Props) {
   const refContainer = useRef<HTMLDivElement | null>(null)
   const refEditor = useRef<JSONEditor | null>(null)
-
+  const { colorMode } = useColorMode()
+  // 根据colorMode动态设置class
+  useEffect(() => {
+    if (refContainer.current) {
+      refContainer.current.className = `jse-theme-${colorMode}`
+    }
+  }, [colorMode])
   useEffect(() => {
     refEditor.current = new JSONEditor({
       target: refContainer.current!,
@@ -36,5 +44,5 @@ export default function ResponseEditors(props: Props) {
     }
   }, [props.content])
 
-  return <div className={`jse-theme-dark`} ref={refContainer}></div>
+  return <div ref={refContainer}></div>
 }

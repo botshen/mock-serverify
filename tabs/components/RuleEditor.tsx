@@ -367,8 +367,6 @@ const RuleEditor = () => {
                   readOnly={false}
                   mode="text"
                   onChange={setJsonData}
-                  mainMenuBar={false}
-                  statusBar={false}
                 />
                 <HStack mt={4} mb={4}>
                   <Spacer />

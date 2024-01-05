@@ -49,12 +49,10 @@ export default function DeltaFlyerPage() {
               switchOn: data.switchOn ?? true,
               requestHeaders: data.request.headers,
               responseHeaders: data.response.headers,
-              // 时间精确到秒 2021-08-09 15:00:00
               mockTime: new Date().toLocaleString("zh-CN", {
                 hour12: false
               })
             }
-            console.log("logs", logs)
             setLogs(() => {
               if (logs.length > 5) {
                 logs.pop()
