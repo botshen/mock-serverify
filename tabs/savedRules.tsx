@@ -44,7 +44,16 @@ export default function SavedRules() {
     )
   }
 
-  const handleChangeSwitch = (index: number) => {}
+  const handleChangeSwitch = (index: number) => {
+    setProjects(
+      projects.map((item: ProjectType) => {
+        if (item.baseUrl === projectInfo.baseUrl) {
+          item.rules[index].switchOn = !item.rules[index].switchOn
+        }
+        return item
+      })
+    )
+  }
 
   const fontSize = "medium"
   const iconStyle = { marginRight: "10px", cursor: "pointer" }

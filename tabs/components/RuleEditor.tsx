@@ -189,7 +189,8 @@ const RuleEditor = () => {
               }
               const formData = {
                 ...values,
-                json
+                json,
+                switchOn: true
               }
               const isExist = projects
                 ?.find((i) => i.baseUrl === baseUrl)
