@@ -1,9 +1,5 @@
-"use client"
-
-import { debug } from "console"
 import { MoonIcon, SunIcon } from "@chakra-ui/icons"
 import {
-  Avatar,
   Box,
   Button,
   CloseButton,
@@ -13,36 +9,22 @@ import {
   HStack,
   Icon,
   IconButton,
-  Menu,
-  MenuButton,
-  MenuDivider,
-  MenuItem,
-  MenuList,
+  Image,
   Text,
   useColorMode,
   useColorModeValue,
   useDisclosure,
-  VStack,
   type BoxProps,
   type FlexProps
 } from "@chakra-ui/react"
 import type { IconType } from "react-icons"
-import {
-  FiBell,
-  FiChevronDown,
-  FiCompass,
-  FiHome,
-  FiMenu,
-  FiSettings,
-  FiStar,
-  FiTrendingUp
-} from "react-icons/fi"
+import { FiCompass, FiHome, FiSettings, FiTrendingUp } from "react-icons/fi"
 import { Outlet, useLocation, useNavigate } from "react-router-dom"
 
-interface LinkItemProps {
-  name: string
-  icon: IconType
-}
+import { useStorage } from "@plasmohq/storage/hook"
+
+import logo from "../assets/icon.png"
+import { defaultCurrent, storageCurrentConfig } from "./store"
 
 interface NavItemProps extends FlexProps {
   icon: IconType
@@ -79,14 +61,6 @@ const menu = [
   }
 ]
 
-const LinkItems: Array<LinkItemProps> = [
-  { name: "Home", icon: FiHome },
-  { name: "Trending", icon: FiTrendingUp },
-  { name: "Explore", icon: FiCompass },
-  { name: "Favourites", icon: FiStar },
-  { name: "Settings", icon: FiSettings }
-]
-
 const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
   const navigate = useNavigate()
   const location = useLocation()
@@ -101,9 +75,17 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
     if (colorMode === "light") {
       return "#51c3e7"
     } else {
-      return "#9ae4d9"
+      return "#2f3747"
     }
   }
+  const textColor = () => {
+    if (colorMode === "light") {
+      return "#fff"
+    } else {
+      return "#fff"
+    }
+  }
+
   return (
     <Box
       transition="3s ease"
@@ -115,15 +97,19 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
       h="full"
       {...rest}>
       <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
-        <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
-          Logo
-        </Text>
+        <HStack>
+          <Image src={logo} boxSize="60px" padding="10px"></Image>
+          <Text fontSize="medium" fontWeight="bold">
+            Mock Serverity
+          </Text>
+        </HStack>
         <CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
       </Flex>
       {menu.map((link) => (
         <NavItem
           key={link.name}
           icon={link.icon}
+          color={location.pathname === link.link ? textColor() : ""}
           bg={location.pathname === link.link ? color() : ""}
           onClick={() => handleMenuChange(link.link)}>
           <Text fontSize="xl">{link.name}</Text>
@@ -134,6 +120,21 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
 }
 
 const NavItem = ({ icon, children, ...rest }: NavItemProps) => {
+  const { colorMode } = useColorMode()
+
+  const hoverColor = () => {
+    if (colorMode === "light") {
+      return {
+        bg: "#6cc1e4",
+        color: "white"
+      }
+    } else {
+      return {
+        bg: "#2f3747",
+        color: "white"
+      }
+    }
+  }
   return (
     <Box
       as="a"
@@ -142,14 +143,11 @@ const NavItem = ({ icon, children, ...rest }: NavItemProps) => {
       <Flex
         align="center"
         p="4"
-        mx="4"
+        m="2"
         borderRadius="lg"
         role="group"
         cursor="pointer"
-        _hover={{
-          bg: "cyan.400",
-          color: "white"
-        }}
+        _hover={hoverColor()}
         {...rest}>
         {icon && (
           <Icon
@@ -168,8 +166,28 @@ const NavItem = ({ icon, children, ...rest }: NavItemProps) => {
 }
 
 const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
+  const [curProjects, setCurProjects] = useStorage<string>(
+    storageCurrentConfig,
+    defaultCurrent
+  )
   const { colorMode, toggleColorMode } = useColorMode()
-
+  const handleClearMock = () => {
+    setCurProjects("")
+  }
+  const colorUrl = () => {
+    if (colorMode === "light") {
+      return "#43787a"
+    } else {
+      return "#9ae4d9"
+    }
+  }
+  const colorTitle = () => {
+    if (colorMode === "light") {
+      return "#b53d37"
+    } else {
+      return "#f3b5b4"
+    }
+  }
   return (
     <Flex
       ml={{ base: 0, md: 60 }}
@@ -179,25 +197,18 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
       bg={useColorModeValue("white", "gray.900")}
       borderBottomWidth="1px"
       borderBottomColor={useColorModeValue("gray.200", "gray.700")}
-      justifyContent={{ base: "space-between", md: "flex-end" }}
+      justifyContent={{ base: "space-between", md: "space-between" }}
       {...rest}>
-      <IconButton
-        display={{ base: "flex", md: "none" }}
-        onClick={onOpen}
-        variant="outline"
-        aria-label="open menu"
-        icon={<FiMenu />}
-      />
-
-      <Text
-        display={{ base: "flex", md: "none" }}
-        fontSize="2xl"
-        fontFamily="monospace"
-        fontWeight="bold">
-        Logo
-      </Text>
-
+      <HStack>
+        <Text fontSize="xl" fontWeight="bold" color={colorTitle()}>
+          currently intercepted:
+        </Text>
+        <Text fontSize="xl" fontWeight="bold" color={colorUrl()}>
+          {curProjects === "" ? "none" : curProjects}
+        </Text>
+      </HStack>
       <HStack spacing={{ base: "0", md: "6" }}>
+        <Button onClick={handleClearMock}>Clear Mock</Button>
         <IconButton
           size="lg"
           variant="ghost"
@@ -205,48 +216,6 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
           icon={colorMode === "light" ? <MoonIcon /> : <SunIcon />}
           onClick={toggleColorMode}
         />
-        {/* <Button onClick={toggleColorMode}>
-          {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
-        </Button> */}
-        <Flex alignItems={"center"}>
-          <Menu>
-            <MenuButton
-              py={2}
-              transition="all 0.3s"
-              _focus={{ boxShadow: "none" }}>
-              <HStack>
-                <Avatar
-                  size={"sm"}
-                  src={
-                    "https://images.unsplash.com/photo-1619946794135-5bc917a27793?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b616b2c5b373a80ffc9636ba24f7a4a9"
-                  }
-                />
-                <VStack
-                  display={{ base: "none", md: "flex" }}
-                  alignItems="flex-start"
-                  spacing="1px"
-                  ml="2">
-                  <Text fontSize="sm">Justina Clark</Text>
-                  <Text fontSize="xs" color="gray.600">
-                    Admin
-                  </Text>
-                </VStack>
-                <Box display={{ base: "none", md: "flex" }}>
-                  <FiChevronDown />
-                </Box>
-              </HStack>
-            </MenuButton>
-            <MenuList
-              bg={useColorModeValue("white", "gray.900")}
-              borderColor={useColorModeValue("gray.200", "gray.700")}>
-              <MenuItem>Profile</MenuItem>
-              <MenuItem>Settings</MenuItem>
-              <MenuItem>Billing</MenuItem>
-              <MenuDivider />
-              <MenuItem>Sign out</MenuItem>
-            </MenuList>
-          </Menu>
-        </Flex>
       </HStack>
     </Flex>
   )
@@ -254,7 +223,6 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
 
 const Main = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
-
   return (
     <Box minH="100vh" bg={useColorModeValue("gray.100", "gray.900")}>
       <SidebarContent
@@ -273,9 +241,7 @@ const Main = () => {
         </DrawerContent>
       </Drawer>
       <MobileNav onOpen={onOpen} />
-
       <Box ml={{ base: 0, md: 60 }} p="4">
-        {/* Content */}
         <Outlet />
       </Box>
     </Box>
