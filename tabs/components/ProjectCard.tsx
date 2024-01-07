@@ -105,9 +105,9 @@ const ProjectCard = ({ name, description, baseUrl }: Props) => {
   return (
     <Card borderRadius={10} cursor="pointer" onClick={handleCardClick}>
       <CardBody>
-        <Heading fontSize="16px">{name}</Heading>
-        <Text fontSize="md">{baseUrl}</Text>
-        <Text fontSize="md">{description}</Text>
+        <Text fontSize="md"> NAME : {name}</Text>
+        <Text fontSize="md">BASEURL: {baseUrl}</Text>
+        <Text fontSize="md">DESCRIPTION: {description || "none"}</Text>
         <HStack marginTop="20px" justifyContent="space-between">
           <Button
             width="50%"
