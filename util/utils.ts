@@ -168,15 +168,14 @@ export function removeInjectScript() {
   }
 }
 
-export const updateRule = (baseUrl: string, formData) => {
+export const updateRule = (baseUrl: string) => {
   chrome.tabs.query({}, function (tabs) {
     const targetTabId = tabs.find((i) => new Url(i.url).origin === baseUrl)?.id
     if (targetTabId) {
       chrome.tabs.sendMessage(targetTabId, {
         type: "updateRules",
         payload: {
-          baseUrl,
-          formData
+          baseUrl
         }
       })
     }

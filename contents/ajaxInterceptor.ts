@@ -53,28 +53,27 @@ window.addEventListener(
   false
 )
 
-chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-  if (request.type === "updateRules") {
+storage.watch({
+  [AJAX_INTERCEPTOR_PROJECTS]: async (c) => {
+    if (c.newValue === undefined) {
+      storage.set(AJAX_INTERCEPTOR_PROJECTS, [])
+    }
     const { origin } = location
-    const currentUrl = request.payload.baseUrl
+    const currentUrl = await storage.get(AJAX_INTERCEPTOR_CURRENT_PROJECT)
     if (origin === currentUrl) {
       injectScriptToPage()
       setGlobalData()
     }
-  }
-})
-
-storage.watch({
-  [AJAX_INTERCEPTOR_PROJECTS]: (c) => {
-    if (c.newValue === undefined) {
-      // 设置初始值
-      storage.set(AJAX_INTERCEPTOR_PROJECTS, [])
-    }
   },
-  [AJAX_INTERCEPTOR_CURRENT_PROJECT]: (c) => {
+  [AJAX_INTERCEPTOR_CURRENT_PROJECT]: async (c) => {
     if (c.newValue === undefined) {
-      // 设置初始值
       storage.set(AJAX_INTERCEPTOR_CURRENT_PROJECT, "")
+    }
+    const { origin } = location
+    const currentUrl = await storage.get(AJAX_INTERCEPTOR_CURRENT_PROJECT)
+    if (origin === currentUrl) {
+      injectScriptToPage()
+      setGlobalData()
     }
   }
 })

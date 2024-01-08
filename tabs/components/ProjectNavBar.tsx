@@ -20,7 +20,6 @@ import { Field, Form, Formik } from "formik"
 import { useStorage } from "@plasmohq/storage/hook"
 
 import { defaultValueFunction, storageConfig } from "~tabs/store"
-import { updateRule } from "~util/utils"
 
 const ProjectNavBar = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -80,7 +79,6 @@ const ProjectNavBar = () => {
               onSubmit={(values, actions) => {
                 const formData = { ...values, rules: [], switchOn: true }
                 setProjects(projects.concat(formData))
-                updateRule(values.baseUrl, formData)
                 actions.setSubmitting(false)
                 onClose()
                 toast({

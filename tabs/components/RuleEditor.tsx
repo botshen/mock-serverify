@@ -254,7 +254,6 @@ const RuleEditor = () => {
                 setProjects(_val)
               }
               if (mode === "log") {
-                updateRule(baseUrl, formData)
                 navigation("../savedRules", {
                   state: projects?.find(
                     (project) => project.baseUrl === baseUrl
@@ -263,7 +262,6 @@ const RuleEditor = () => {
                 actions.setSubmitting(false)
                 return
               }
-              updateRule(baseUrl, formData)
               actions.setSubmitting(false)
               handleCancel()
             }}>

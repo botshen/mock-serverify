@@ -104,11 +104,16 @@ const ProjectCard = ({ name, description, baseUrl }: Props) => {
   }
   return (
     <Card borderRadius={10} cursor="pointer" onClick={handleCardClick}>
-      <CardBody>
-        <Text fontSize="md"> NAME : {name}</Text>
-        <Text fontSize="md">BASEURL: {baseUrl}</Text>
-        <Text fontSize="md">DESCRIPTION: {description || "none"}</Text>
-        <HStack marginTop="20px" justifyContent="space-between">
+      <CardBody
+        display="flex"
+        flexDirection="column"
+        justifyContent="space-between">
+        <div>
+          <Text fontSize="16px"> NAME : {name}</Text>
+          <Text fontSize="16px">BASEURL: {baseUrl}</Text>
+          <Text fontSize="16px">DESCRIPTION: {description || "none"}</Text>
+        </div>
+        <HStack justifyContent="space-between">
           <Button
             width="50%"
             onClick={(event) => handleDelete(event)}
