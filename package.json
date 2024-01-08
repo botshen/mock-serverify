@@ -6,8 +6,13 @@
   "author": "Plasmo Corp. <foss@plasmo.com>",
   "scripts": {
     "dev": "plasmo dev",
-    "verbose": "plasmo dev --verbose",
+    "dev:firefox": "plasmo dev --target=firefox-mv2",
+    "debug": "plasmo dev --verbose",
+    "debug:firefox": "plasmo dev --target=firefox-mv2 --verbose",
     "build": "plasmo build",
+    "build:firefox": "plasmo build --target=firefox-mv2",
+    "package": "plasmo package",
+    "package:firefox": "plasmo package --target=firefox-mv2",
     "test": "plasmo test"
   },
   "dependencies": {
