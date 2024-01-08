@@ -4,13 +4,13 @@ import Url from "url-parse"
 
 import {
   AJAX_INTERCEPTOR_CURRENT_PROJECT,
+  AJAX_INTERCEPTOR_GLOBAL_SETTING,
   AJAX_INTERCEPTOR_PROJECTS,
   CUSTOM_EVENT_NAME,
   INJECT_ELEMENT_ID
 } from "./const"
-// import { notification } from 'antd';
 import FetchInterceptor from "./fetch"
-import { logFetch, logTerminalMockMessage } from "./utils"
+import { dispatchToast, logFetch, logTerminalMockMessage } from "./utils"
 
 function getCurrentProject() {
   const inputElem = document.getElementById(
@@ -25,14 +25,18 @@ function getCurrentProject() {
     const config = JSON.parse(configStr)
     const {
       [AJAX_INTERCEPTOR_CURRENT_PROJECT]: currentProject,
-      [AJAX_INTERCEPTOR_PROJECTS]: projects
+      [AJAX_INTERCEPTOR_PROJECTS]: projects,
+      [AJAX_INTERCEPTOR_GLOBAL_SETTING]: globalSetting
     } = config
     const curProject =
       projects?.find(
         (item: { baseUrl: string }) => item.baseUrl === currentProject
       ) || {}
 
-    return curProject
+    return {
+      curProject,
+      globalSetting
+    }
   } catch (e) {
     return {}
   }
@@ -43,7 +47,7 @@ async function mockCore(url: string, method: string) {
   const targetUrl = new Url(url)
   const str = targetUrl.pathname
 
-  const currentProject = getCurrentProject()
+  const currentProject = getCurrentProject().curProject
   if (currentProject?.switchOn) {
     const rules = currentProject.rules || []
 
@@ -109,7 +113,9 @@ function handMockResult({ res, request, config }) {
 
 proxy({
   onRequest: async (config, handler) => {
-    const currentProject = getCurrentProject()
+    const currentProject = getCurrentProject().curProject
+    const globalSetting = getCurrentProject().globalSetting
+
     if (!currentProject.switchOn) {
       handler.next(config)
       return
@@ -130,16 +136,14 @@ proxy({
       }
       try {
         const res = await mockCore(url.href, config.method)
-
         const { payload, result } = handMockResult({ res, request, config })
         sendMsg(payload, true)
-        logTerminalMockMessage(config, result, request)
-        // notification.open({
-        //   message: "Mock Success",
-        //   placement: "bottomRight",
-        //   duration: 1.5,
-        //   description: config.url
-        // })
+        if (globalSetting.terminalLog) {
+          logTerminalMockMessage(config, result, request)
+        }
+        if (globalSetting.toastLog) {
+          dispatchToast(config.url)
+        }
         handler.resolve(result)
       } catch (error) {
         handler.next(config)
@@ -148,7 +152,9 @@ proxy({
   },
   //请求发生错误时进入，比如超时；注意，不包括http状态码错误，如404仍然会认为请求成功
   onError: async (err, handler) => {
-    const currentProject = getCurrentProject()
+    const currentProject = getCurrentProject().curProject
+    const globalSetting = getCurrentProject().globalSetting
+
     if (!currentProject.switchOn) {
       handler.next(err)
       return
@@ -166,7 +172,9 @@ proxy({
     handler.next(err)
   },
   onResponse: async (response, handler) => {
-    const currentProject = getCurrentProject()
+    const currentProject = getCurrentProject().curProject
+    const globalSetting = getCurrentProject().globalSetting
+
     if (!currentProject.switchOn) {
       handler.resolve(response)
       return
@@ -188,11 +196,15 @@ proxy({
       const { payload, result } = handMockResult({ res, request, config })
 
       sendMsg(payload, true)
-      logTerminalMockMessage(config, result, request)
+      if (globalSetting.terminalLog) {
+        logTerminalMockMessage(config, result, request)
+      }
+      if (globalSetting.toastLog) {
+        dispatchToast(config.url)
+      }
       handler.resolve(result)
     } catch (error) {
       const url = new Url(config.url)
-
       const payload = {
         request: {
           method: config.method,

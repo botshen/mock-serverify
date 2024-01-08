@@ -6,6 +6,7 @@ import { Storage } from "@plasmohq/storage"
 
 import {
   AJAX_INTERCEPTOR_CURRENT_PROJECT,
+  AJAX_INTERCEPTOR_GLOBAL_SETTING,
   AJAX_INTERCEPTOR_PROJECTS,
   INJECT_ELEMENT_ID
 } from "./const"
@@ -115,16 +116,22 @@ const executeScript = (data: any) => {
 }
 const storage = new Storage({
   area: "local",
-  copiedKeyList: [AJAX_INTERCEPTOR_PROJECTS, AJAX_INTERCEPTOR_CURRENT_PROJECT]
+  copiedKeyList: [
+    AJAX_INTERCEPTOR_PROJECTS,
+    AJAX_INTERCEPTOR_CURRENT_PROJECT,
+    AJAX_INTERCEPTOR_GLOBAL_SETTING
+  ]
 })
 
 export const setGlobalData = async () => {
   console.log("setGlobalData")
   const list = await storage.get(AJAX_INTERCEPTOR_PROJECTS)
   const cur = await storage.get(AJAX_INTERCEPTOR_CURRENT_PROJECT)
+  const setting = await storage.get(AJAX_INTERCEPTOR_GLOBAL_SETTING)
   const result = {
     [AJAX_INTERCEPTOR_PROJECTS]: list,
-    [AJAX_INTERCEPTOR_CURRENT_PROJECT]: cur
+    [AJAX_INTERCEPTOR_CURRENT_PROJECT]: cur,
+    [AJAX_INTERCEPTOR_GLOBAL_SETTING]: setting
   }
   executeScript(result)
 }
@@ -188,4 +195,13 @@ export const isMockText = (isMock: boolean) => {
   } else {
     return "穿透"
   }
+}
+
+export const dispatchToast = (message: string = "") => {
+  const event = new CustomEvent("toast", {
+    detail: {
+      message
+    }
+  })
+  window.dispatchEvent(event)
 }

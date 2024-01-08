@@ -1,19 +1,12 @@
-import { m } from "framer-motion"
-
 import { Storage } from "@plasmohq/storage"
 
 import {
   AJAX_INTERCEPTOR_CURRENT_PROJECT,
+  AJAX_INTERCEPTOR_GLOBAL_SETTING,
   AJAX_INTERCEPTOR_PROJECTS,
   CUSTOM_EVENT_NAME
 } from "../util/const"
 import { injectScriptToPage, setGlobalData } from "../util/utils"
-
-// window.addEventListener("load", () => {
-//   console.log(
-//     "You may find that having is not so pleasing a thing as wanting. This is not logical, but it is often true."
-//   )
-// })
 
 const storage = new Storage({
   area: "local",
@@ -45,35 +38,41 @@ window.addEventListener(
             data: customEvent.detail
           })
         }
-      } catch (error) {
-        console.error("error", error)
-      }
+      } catch (error) {}
     }
   },
   false
 )
-
+const setMockData = async () => {
+  const { origin } = location
+  const currentUrl = await storage.get(AJAX_INTERCEPTOR_CURRENT_PROJECT)
+  if (origin === currentUrl) {
+    injectScriptToPage()
+    setGlobalData()
+  }
+}
 storage.watch({
   [AJAX_INTERCEPTOR_PROJECTS]: async (c) => {
     if (c.newValue === undefined) {
       storage.set(AJAX_INTERCEPTOR_PROJECTS, [])
     }
-    const { origin } = location
-    const currentUrl = await storage.get(AJAX_INTERCEPTOR_CURRENT_PROJECT)
-    if (origin === currentUrl) {
-      injectScriptToPage()
-      setGlobalData()
-    }
+    setMockData()
   },
   [AJAX_INTERCEPTOR_CURRENT_PROJECT]: async (c) => {
     if (c.newValue === undefined) {
       storage.set(AJAX_INTERCEPTOR_CURRENT_PROJECT, "")
     }
-    const { origin } = location
-    const currentUrl = await storage.get(AJAX_INTERCEPTOR_CURRENT_PROJECT)
-    if (origin === currentUrl) {
-      injectScriptToPage()
-      setGlobalData()
+    setMockData()
+  },
+  [AJAX_INTERCEPTOR_GLOBAL_SETTING]: async (c) => {
+    if (c.newValue === undefined) {
+      storage.set(AJAX_INTERCEPTOR_GLOBAL_SETTING, {
+        terminalLog: true,
+        toastLog: true,
+        transmission: false,
+        globalSwitch: true
+      })
     }
+    setMockData()
   }
 })
