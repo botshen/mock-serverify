@@ -4,8 +4,8 @@ import { Storage } from "@plasmohq/storage"
 
 import {
   AJAX_INTERCEPTOR_CURRENT_PROJECT,
-  AJAX_INTERCEPTOR_GLOBAL_SETTING,
   AJAX_INTERCEPTOR_PROJECTS,
+  AJAX_INTERCEPTOR_SETTINGS,
   CUSTOM_EVENT_NAME
 } from "../util/const"
 import { injectScriptToPage, setGlobalData } from "../util/utils"
@@ -78,9 +78,9 @@ storage.watch({
     }
     setMockData()
   },
-  [AJAX_INTERCEPTOR_GLOBAL_SETTING]: async (c) => {
+  [AJAX_INTERCEPTOR_SETTINGS]: async (c) => {
     if (c.newValue === undefined) {
-      storage.set(AJAX_INTERCEPTOR_GLOBAL_SETTING, {
+      storage.set(AJAX_INTERCEPTOR_SETTINGS, {
         terminalLog: true,
         toastLog: true,
         transmission: false,

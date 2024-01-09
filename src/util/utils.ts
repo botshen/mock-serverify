@@ -6,8 +6,8 @@ import { Storage } from "@plasmohq/storage"
 
 import {
   AJAX_INTERCEPTOR_CURRENT_PROJECT,
-  AJAX_INTERCEPTOR_GLOBAL_SETTING,
   AJAX_INTERCEPTOR_PROJECTS,
+  AJAX_INTERCEPTOR_SETTINGS,
   INJECT_ELEMENT_ID
 } from "./const"
 
@@ -119,7 +119,7 @@ const storage = new Storage({
   copiedKeyList: [
     AJAX_INTERCEPTOR_PROJECTS,
     AJAX_INTERCEPTOR_CURRENT_PROJECT,
-    AJAX_INTERCEPTOR_GLOBAL_SETTING
+    AJAX_INTERCEPTOR_SETTINGS
   ]
 })
 
@@ -127,11 +127,11 @@ export const setGlobalData = async () => {
   console.log("setGlobalData")
   const list = await storage.get(AJAX_INTERCEPTOR_PROJECTS)
   const cur = await storage.get(AJAX_INTERCEPTOR_CURRENT_PROJECT)
-  const setting = await storage.get(AJAX_INTERCEPTOR_GLOBAL_SETTING)
+  const setting = await storage.get(AJAX_INTERCEPTOR_SETTINGS)
   const result = {
     [AJAX_INTERCEPTOR_PROJECTS]: list,
     [AJAX_INTERCEPTOR_CURRENT_PROJECT]: cur,
-    [AJAX_INTERCEPTOR_GLOBAL_SETTING]: setting
+    [AJAX_INTERCEPTOR_SETTINGS]: setting
   }
   executeScript(result)
 }
@@ -190,4 +190,10 @@ export const dispatchToast = (message: string = "") => {
     }
   })
   window.dispatchEvent(event)
+}
+export function removeTrailingSlash(url) {
+  if (url.endsWith("/") && url.length > 1) {
+    return url.slice(0, -1)
+  }
+  return url
 }

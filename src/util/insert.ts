@@ -4,8 +4,8 @@ import Url from "url-parse"
 
 import {
   AJAX_INTERCEPTOR_CURRENT_PROJECT,
-  AJAX_INTERCEPTOR_GLOBAL_SETTING,
   AJAX_INTERCEPTOR_PROJECTS,
+  AJAX_INTERCEPTOR_SETTINGS,
   CUSTOM_EVENT_NAME,
   INJECT_ELEMENT_ID
 } from "./const"
@@ -26,7 +26,7 @@ function getCurrentProject() {
     const {
       [AJAX_INTERCEPTOR_CURRENT_PROJECT]: currentProject,
       [AJAX_INTERCEPTOR_PROJECTS]: projects,
-      [AJAX_INTERCEPTOR_GLOBAL_SETTING]: globalSetting
+      [AJAX_INTERCEPTOR_SETTINGS]: globalSetting
     } = config
     const curProject =
       projects?.find(

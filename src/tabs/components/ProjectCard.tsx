@@ -73,7 +73,6 @@ const ProjectCard = ({ name, description, baseUrl }: Props) => {
   const handleCardClick = () => {
     setCurProjects(baseUrl)
     if (curProjects !== baseUrl) {
-      // reset logs if switch to another project
       clearLogList()
     }
     navigation("../savedRules", {
@@ -92,13 +91,22 @@ const ProjectCard = ({ name, description, baseUrl }: Props) => {
     setProjects(
       projects.filter((item: { baseUrl: string }) => item.baseUrl !== baseUrl)
     )
+    if (curProjects === baseUrl) {
+      setCurProjects("")
+    }
     modals.modal2.onClose()
     toast({
       title: "Modification successful",
-      position: "top",
+      status: "success",
+      duration: 3000,
       isClosable: true,
+      position: "top",
       containerStyle: {
-        fontSize: "1.2rem"
+        width: "400px",
+        maxWidth: "100%",
+        whiteSpace: "pre-wrap",
+        wordBreak: "break-all",
+        fontSize: "1rem"
       }
     })
   }
@@ -163,20 +171,34 @@ const ProjectCard = ({ name, description, baseUrl }: Props) => {
             <Formik
               initialValues={{ name, description, baseUrl }}
               onSubmit={(values, actions) => {
+                // todo
                 const result = projects.map((project) =>
                   project.baseUrl === baseUrl
-                    ? { ...project, ...values, switchOn: true }
-                    : { ...project, switchOn: true }
+                    ? {
+                        ...project,
+                        ...values,
+                        switchOn: true
+                      }
+                    : {
+                        ...project,
+                        switchOn: true
+                      }
                 )
                 setProjects(result)
                 actions.setSubmitting(false)
                 onClose()
                 toast({
                   title: "Modification successful",
-                  position: "top",
+                  status: "success",
+                  duration: 3000,
                   isClosable: true,
+                  position: "top",
                   containerStyle: {
-                    fontSize: "1.2rem"
+                    width: "400px",
+                    maxWidth: "100%",
+                    whiteSpace: "pre-wrap",
+                    wordBreak: "break-all",
+                    fontSize: "1rem"
                   }
                 })
               }}>
