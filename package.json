@@ -4,9 +4,25 @@
   "version": "0.0.1",
   "description": "useful mock extension",
   "author": "Plasmo Corp. <foss@plasmo.com>",
+  "pnpm": {
+    "peerDependencyRules": {
+      "allowedVersions": {
+        "svgo": "2.8.0",
+        "node-fetch": "3.3.1"
+      }
+    },
+    "allowedDeprecatedVersions": {
+      "har-validator": "5.1.5",
+      "request": "2.88.2",
+      "stable": "0.1.8",
+      "uuid": "3.4.0"
+    }
+  },
   "scripts": {
     "dev": "plasmo dev",
     "dev:firefox": "plasmo dev --target=firefox-mv2",
+    "start": "web-ext run --source-dir ./build/chrome-mv3-dev -t chromium --start-url chrome://newtab",
+    "start:firefox": "web-ext run --source-dir ./build/firefox-mv2-dev",
     "debug": "plasmo dev --verbose",
     "debug:firefox": "plasmo dev --target=firefox-mv2 --verbose",
     "build": "plasmo build",
@@ -34,6 +50,8 @@
     "react-router-dom": "^6.21.0",
     "url-parse": "^1.5.10",
     "vanilla-jsoneditor": "^0.21.1",
+    "web-ext": "^7.9.0",
+    "webextension-polyfill": "^0.10.0",
     "zustand": "^4.4.7"
   },
   "devDependencies": {
