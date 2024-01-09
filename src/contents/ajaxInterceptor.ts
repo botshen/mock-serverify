@@ -22,7 +22,19 @@ const storage = new Storage({
     setGlobalData()
   }
 })()
-
+export const sendMessage = async (message: { type: string; data: any }) => {
+  try {
+    await await Browser.runtime.sendMessage(message)
+  } catch (error) {
+    if (
+      !(error instanceof Error) ||
+      error.message !==
+        "Could not establish connection. Receiving end does not exist."
+    ) {
+      throw error
+    }
+  }
+}
 window.addEventListener(
   CUSTOM_EVENT_NAME,
   async (event) => {
@@ -32,15 +44,15 @@ window.addEventListener(
         const currentNameUrl = await storage.get(
           AJAX_INTERCEPTOR_CURRENT_PROJECT
         )
-        const { origin } = location
-
-        if (customEvent.detail && origin === currentNameUrl) {
-          await Browser.runtime.sendMessage({
+        if (customEvent.detail && location.origin === currentNameUrl) {
+          await sendMessage({
             type: "ajaxInterceptor",
             data: customEvent.detail
           })
         }
-      } catch (error) {}
+      } catch (error) {
+        console.error(error)
+      }
     }
   },
   false
