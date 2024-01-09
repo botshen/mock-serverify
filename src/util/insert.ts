@@ -113,17 +113,8 @@ function handMockResult({ res, request, config }) {
 proxy({
   onRequest: async (config, handler) => {
     const currentProject = getCurrentProject().curProject
-    console.log(
-      "%c [ currentProject ]-117",
-      "font-size:13px; background:pink; color:#bf2c9f;",
-      currentProject
-    )
+
     const globalSetting = getCurrentProject().globalSetting
-    console.log(
-      "%c [ globalSetting ]-123",
-      "font-size:13px; background:pink; color:#bf2c9f;",
-      globalSetting
-    )
 
     if (!currentProject.switchOn) {
       handler.next(config)
