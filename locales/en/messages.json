@@ -1,0 +1,10 @@
+{
+  "currentlyIntercepted": {
+    "message": "currently intercepted",
+    "description": "currently intercepted"
+  },
+  "mockSuccess": {
+    "message": "Mock Success",
+    "description": "Mock Success"
+  }
+}

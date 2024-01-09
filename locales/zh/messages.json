@@ -1,0 +1,10 @@
+{
+  "currentlyIntercepted": {
+    "message": "当前拦截",
+    "description": "当前拦截"
+  },
+  "mockSuccess": {
+    "message": "模拟成功",
+    "description": "模拟成功"
+  }
+}
