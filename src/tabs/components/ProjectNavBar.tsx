@@ -88,7 +88,7 @@ const ProjectNavBar = () => {
           </Text>
           <Input placeholder="Basic usage" /> */}
         </HStack>
-        <Button onClick={onOpen} colorScheme="blue">
+        <Button onClick={onOpen} colorScheme="teal">
           New Project
         </Button>
       </HStack>

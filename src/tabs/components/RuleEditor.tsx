@@ -105,7 +105,7 @@ const RuleEditor = () => {
       return {
         json: {},
         text: undefined,
-        textAreaValue: jsonData
+        textAreaValue: undefined
       }
     } else if (mode === "log") {
       console.log("row.Response", row.Response)

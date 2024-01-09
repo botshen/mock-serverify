@@ -27,10 +27,10 @@ const RulesNavBar = ({ baseUrl }: Props) => {
           <Input placeholder="Basic usage" /> */}
         </HStack>
         <HStack>
-          <Button onClick={onBack} colorScheme="blue">
+          <Button onClick={onBack} colorScheme="teal">
             Back
           </Button>
-          <Button onClick={handleAddRule} colorScheme="blue">
+          <Button onClick={handleAddRule} colorScheme="teal">
             New Rule
           </Button>
         </HStack>
