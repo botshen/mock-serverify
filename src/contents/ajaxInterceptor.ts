@@ -1,3 +1,5 @@
+import Browser from "webextension-polyfill"
+
 import { Storage } from "@plasmohq/storage"
 
 import {
@@ -24,7 +26,7 @@ const storage = new Storage({
 window.addEventListener(
   CUSTOM_EVENT_NAME,
   async (event) => {
-    if (chrome.runtime?.id) {
+    if (Browser.runtime?.id) {
       try {
         const customEvent = event as CustomEvent
         const currentNameUrl = await storage.get(
@@ -33,7 +35,7 @@ window.addEventListener(
         const { origin } = location
 
         if (customEvent.detail && origin === currentNameUrl) {
-          await chrome.runtime.sendMessage({
+          await Browser.runtime.sendMessage({
             type: "ajaxInterceptor",
             data: customEvent.detail
           })

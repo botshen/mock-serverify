@@ -175,20 +175,6 @@ export function removeInjectScript() {
   }
 }
 
-export const updateRule = (baseUrl: string) => {
-  chrome.tabs.query({}, function (tabs) {
-    const targetTabId = tabs.find((i) => new Url(i.url).origin === baseUrl)?.id
-    if (targetTabId) {
-      chrome.tabs.sendMessage(targetTabId, {
-        type: "updateRules",
-        payload: {
-          baseUrl
-        }
-      })
-    }
-  })
-}
-
 export const isMockText = (isMock: boolean) => {
   if (isMock) {
     return "Mock"

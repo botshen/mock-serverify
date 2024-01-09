@@ -1,16 +1,16 @@
-/*global chrome*/
+import Browser from "webextension-polyfill"
 
-chrome.action.onClicked.addListener(() => {
+Browser.action.onClicked.addListener(() => {
   try {
-    const targetUrl = chrome.runtime.getURL("tabs/App.html")
+    const targetUrl = Browser.runtime.getURL("tabs/App.html")
 
-    chrome.tabs.query({ url: targetUrl }, (tabs) => {
+    Browser.tabs.query({ url: targetUrl }).then((tabs) => {
       if (tabs.length > 0) {
         // If the target URL is already open, update the existing tab's content
-        chrome.tabs.update(tabs[0].id, { active: true })
+        Browser.tabs.update(tabs[0].id, { active: true })
       } else {
         // If the target URL is not open, create a new tab and load it
-        chrome.tabs.create({ url: targetUrl })
+        Browser.tabs.create({ url: targetUrl })
       }
     })
   } catch (error) {

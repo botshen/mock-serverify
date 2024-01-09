@@ -1,4 +1,5 @@
 import { RouterProvider } from "react-router-dom"
+import Browser from "webextension-polyfill"
 
 import "../../assets/style.scss"
 
@@ -34,7 +35,7 @@ export default function DeltaFlyerPage() {
   useEffect(() => {
     ;(async () => {
       try {
-        chrome.runtime.onMessage.addListener(async (event) => {
+        Browser.runtime.onMessage.addListener(async (event) => {
           if (!currentProject) {
             return
           }
