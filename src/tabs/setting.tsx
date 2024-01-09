@@ -39,7 +39,7 @@ const Setting = () => {
           }>
           Transmission to the back-end
         </Checkbox>
-        <Checkbox
+        {/* <Checkbox
           marginRight="10px"
           size="lg"
           isChecked={setting.globalSwitch}
@@ -48,7 +48,7 @@ const Setting = () => {
           }
           colorScheme="orange">
           Global switch
-        </Checkbox>
+        </Checkbox> */}
         <FormHelperText>Effective immediately after operation.</FormHelperText>
       </FormControl>
     </div>

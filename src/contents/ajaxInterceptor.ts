@@ -83,8 +83,7 @@ storage.watch({
       storage.set(AJAX_INTERCEPTOR_SETTINGS, {
         terminalLog: true,
         toastLog: true,
-        transmission: false,
-        globalSwitch: true
+        transmission: false
       })
     }
     setMockData()

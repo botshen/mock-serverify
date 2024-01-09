@@ -42,7 +42,6 @@ function getCurrentProject() {
   }
 }
 
-console.log("inject.ts")
 async function mockCore(url: string, method: string) {
   const targetUrl = new Url(url)
   const str = targetUrl.pathname
@@ -57,7 +56,7 @@ async function mockCore(url: string, method: string) {
       const pathname = pathRule.pathname
       return (
         med === method &&
-        // item?.switchOn &&
+        item?.switchOn &&
         str === pathname &&
         currentProject.baseUrl === pathRule.origin
       )
@@ -114,7 +113,17 @@ function handMockResult({ res, request, config }) {
 proxy({
   onRequest: async (config, handler) => {
     const currentProject = getCurrentProject().curProject
+    console.log(
+      "%c [ currentProject ]-117",
+      "font-size:13px; background:pink; color:#bf2c9f;",
+      currentProject
+    )
     const globalSetting = getCurrentProject().globalSetting
+    console.log(
+      "%c [ globalSetting ]-123",
+      "font-size:13px; background:pink; color:#bf2c9f;",
+      globalSetting
+    )
 
     if (!currentProject.switchOn) {
       handler.next(config)
@@ -124,7 +133,7 @@ proxy({
       handler.next(config)
       return
     }
-    if (currentProject.isRealRequest ?? false) {
+    if (globalSetting.transmission) {
       handler.next(config)
     } else {
       const url = new Url(config.url)

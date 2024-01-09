@@ -124,7 +124,6 @@ const storage = new Storage({
 })
 
 export const setGlobalData = async () => {
-  console.log("setGlobalData")
   const list = await storage.get(AJAX_INTERCEPTOR_PROJECTS)
   const cur = await storage.get(AJAX_INTERCEPTOR_CURRENT_PROJECT)
   const setting = await storage.get(AJAX_INTERCEPTOR_SETTINGS)
@@ -136,7 +135,6 @@ export const setGlobalData = async () => {
   executeScript(result)
 }
 export const injectScriptToPage = () => {
-  console.log("injectScriptToPage")
   try {
     removeInjectScript()
     let insertScript = document.createElement("script")
@@ -152,11 +150,9 @@ export const injectScriptToPage = () => {
   }
 }
 export function removeInjectScript() {
-  console.log("removeInjectScript")
-  // 创建正则表达式，匹配动态部分
-  const regex =
-    /^chrome-extension:\/\/lgabnfcflgnaldfgnaedddgoenldnhdf\/insert\.[a-f0-9]+\.js\?[0-9]+$/
-
+  const regex = new RegExp(
+    `^chrome-extension:\/\/${chrome.runtime.id}\/insert\\.[a-f0-9]+\\.js\\?[0-9]+$`
+  )
   // 查找所有 script 元素
   const scriptElements = document.querySelectorAll("script")
 
