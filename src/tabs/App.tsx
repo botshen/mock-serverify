@@ -1,6 +1,6 @@
 import { RouterProvider } from "react-router-dom"
 
-import "../assets/style.scss"
+import "../../assets/style.scss"
 
 import { ChakraProvider, ColorModeScript } from "@chakra-ui/react"
 import { useEffect } from "react"

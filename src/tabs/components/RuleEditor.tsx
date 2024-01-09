@@ -20,7 +20,6 @@ import { useLocation, useNavigate } from "react-router-dom"
 import { useStorage } from "@plasmohq/storage/hook"
 
 import { defaultValueFunction, storageConfig } from "~tabs/store"
-import { updateRule } from "~util/utils"
 
 import ResponseEditors from "./ResponseEditor"
 

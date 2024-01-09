@@ -23,7 +23,7 @@ import { Outlet, useLocation, useNavigate } from "react-router-dom"
 
 import { useStorage } from "@plasmohq/storage/hook"
 
-import logo from "../assets/icon.png"
+import logo from "../../assets/icon.png"
 import { defaultCurrent, storageCurrentConfig } from "./store"
 
 interface NavItemProps extends FlexProps {

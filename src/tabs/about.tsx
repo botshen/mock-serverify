@@ -1,7 +1,7 @@
-import { Center, Image, Text } from "@chakra-ui/react"
+import { Image, Text } from "@chakra-ui/react"
 import React from "react"
 
-import logo from "../assets/icon.png"
+import logo from "../../assets/icon.png"
 
 const About = () => {
   return (
