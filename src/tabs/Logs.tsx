@@ -33,8 +33,12 @@ export default function Logs() {
 
   return (
     <>
-      <Button onClick={clearLogList}>clear log</Button>
-      <TableContainer>
+      <div className="flex justify-end">
+        <Button colorScheme="blue" onClick={clearLogList}>
+          clear log
+        </Button>
+      </div>
+       <TableContainer>
         <Table variant="simple">
           <Thead>
             <Tr>

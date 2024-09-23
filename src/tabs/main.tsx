@@ -207,7 +207,9 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
         </Text>
       </HStack>
       <HStack spacing={{ base: "0", md: "6" }}>
-        <Button onClick={handleClearMock}>Clear Mock</Button>
+        <Button onClick={handleClearMock} colorScheme="red">
+          Clear Mock
+        </Button>
         <IconButton
           size="lg"
           variant="ghost"
