@@ -1,7 +1,7 @@
 {
   "name": "mock-serverify",
   "displayName": "Mock serverify",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "useful mock extension",
   "author": "Plasmo Corp. <foss@plasmo.com>",
   "pnpm": {
